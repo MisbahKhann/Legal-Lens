@@ -15,7 +15,7 @@ from app.extraction.ai_models import (
     CandidateEntity,
     CandidateRelation,
     AIExtractionResult,
-    CombinedExtractionResult
+    CombinedExtractionResult,
 )
 from app.extraction.chunker import DocumentChunker, DocumentChunk
 from app.extraction.gliner_relex import GLiNERRelexExtractor
@@ -34,7 +34,7 @@ class AIExtractionPipeline:
         self,
         extractor: Optional[GLiNERRelexExtractor] = None,
         chunker: Optional[DocumentChunker] = None,
-        deterministic_pipeline: Optional[DeterministicExtractionPipeline] = None
+        deterministic_pipeline: Optional[DeterministicExtractionPipeline] = None,
     ):
         """
         Args:
@@ -44,7 +44,9 @@ class AIExtractionPipeline:
         """
         self.extractor = extractor or GLiNERRelexExtractor()
         self.chunker = chunker or DocumentChunker()
-        self.deterministic_pipeline = deterministic_pipeline or DeterministicExtractionPipeline()
+        self.deterministic_pipeline = (
+            deterministic_pipeline or DeterministicExtractionPipeline()
+        )
 
     def extract_ai_candidates(self, document: LegalDocument) -> AIExtractionResult:
         """
@@ -56,11 +58,15 @@ class AIExtractionPipeline:
         Returns:
             AIExtractionResult containing extracted candidate entities and relations.
         """
-        logger.info(f"Starting Step 4 AI Extraction for document '{document.document_id}' (case='{document.case_id}').")
+        logger.info(
+            f"Starting Step 4 AI Extraction for document '{document.document_id}' (case='{document.case_id}')."
+        )
 
         # 1. Chunk document while preserving page/section/offset provenance
         chunks: List[DocumentChunk] = self.chunker.chunk_document(document)
-        logger.info(f"Document '{document.document_id}' split into {len(chunks)} chunks across {len(document.pages)} pages.")
+        logger.info(
+            f"Document '{document.document_id}' split into {len(chunks)} chunks across {len(document.pages)} pages."
+        )
 
         all_entities: List[CandidateEntity] = []
         all_relations: List[CandidateRelation] = []
@@ -91,7 +97,7 @@ class AIExtractionPipeline:
             "total_valid_relations": len(all_relations),
             "total_rejected_relations": len(rejected_relations),
             **{f"entity_{k}": v for k, v in entity_counts.items()},
-            **{f"relation_{k}": v for k, v in relation_counts.items()}
+            **{f"relation_{k}": v for k, v in relation_counts.items()},
         }
 
         logger.info(
@@ -107,13 +113,13 @@ class AIExtractionPipeline:
             entities=all_entities,
             relations=all_relations,
             rejected_relations=rejected_relations,
-            summary_counts=summary_counts
+            summary_counts=summary_counts,
         )
 
     def run_pipeline(
         self,
         document: LegalDocument,
-        deterministic_result: Optional[DeterministicExtractionResult] = None
+        deterministic_result: Optional[DeterministicExtractionResult] = None,
     ) -> CombinedExtractionResult:
         """
         Full combined pipeline execution: runs Step 3 deterministic extraction (if not provided)
@@ -128,7 +134,9 @@ class AIExtractionPipeline:
         """
         if deterministic_result is None:
             logger.info("Executing Step 3 Deterministic Extraction...")
-            deterministic_result = self.deterministic_pipeline.extract_candidates(document)
+            deterministic_result = self.deterministic_pipeline.extract_candidates(
+                document
+            )
 
         ai_result = self.extract_ai_candidates(document)
 
@@ -139,7 +147,7 @@ class AIExtractionPipeline:
             ai_result=ai_result,
             total_deterministic_entities=len(deterministic_result.candidates),
             total_ai_entities=len(ai_result.entities),
-            total_ai_relations=len(ai_result.relations)
+            total_ai_relations=len(ai_result.relations),
         )
 
         logger.info(

@@ -12,12 +12,11 @@ from app.schema.provenance import ExtractionMethod
 from app.extraction.base import BaseExtractor
 from app.extraction.models import ExtractedCandidateEntity
 
-
 EXHIBIT_PATTERN = re.compile(
-    r'\b(?P<party>Plaintiff\'s|Defendant\'s|Pl\.|Def\.|Trial|Joint)?\s*'
-    r'(?:Exhibit|Ex\.)\s*'
-    r'(?P<label>[A-Za-z0-9]+(?:[\-\.][A-Za-z0-9]+)?)',
-    re.IGNORECASE
+    r"\b(?P<party>Plaintiff\'s|Defendant\'s|Pl\.|Def\.|Trial|Joint)?\s*"
+    r"(?:Exhibit|Ex\.)\s*"
+    r"(?P<label>[A-Za-z0-9]+(?:[\-\.][A-Za-z0-9]+)?)",
+    re.IGNORECASE,
 )
 
 
@@ -97,7 +96,7 @@ class ExhibitExtractor(BaseExtractor):
                         category=self.category,
                         original_value=raw_match,
                         normalized_value=normalized_val,
-                        metadata={"label": label.upper(), "party": party}
+                        metadata={"label": label.upper(), "party": party},
                     )
                 )
 

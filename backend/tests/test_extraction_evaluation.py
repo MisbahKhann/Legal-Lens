@@ -3,7 +3,10 @@ Unit tests for Step 3 Evaluation Framework and Precision/Recall calculation.
 """
 
 from app.schema.entity_types import EntityType
-from app.extraction.models import ExtractedCandidateEntity, DeterministicExtractionResult
+from app.extraction.models import (
+    ExtractedCandidateEntity,
+    DeterministicExtractionResult,
+)
 from app.extraction.evaluator import GoldAnnotation, ExtractionEvaluator
 
 
@@ -19,7 +22,7 @@ def test_evaluation_metric_calculation():
             entity_type=EntityType.STATUTE,
             category="statutory_citation",
             original_value="42 U.S.C. § 1983",
-            normalized_value="42 U.S.C. § 1983"
+            normalized_value="42 U.S.C. § 1983",
         ),
         ExtractedCandidateEntity(
             document_id=doc_id,
@@ -28,7 +31,7 @@ def test_evaluation_metric_calculation():
             entity_type=EntityType.DATE,
             category="date",
             original_value="January 15, 2024",
-            normalized_value="2024-01-15"
+            normalized_value="2024-01-15",
         ),
         ExtractedCandidateEntity(
             document_id=doc_id,
@@ -37,7 +40,7 @@ def test_evaluation_metric_calculation():
             entity_type=EntityType.STATUTE,
             category="statutory_citation",
             original_value="999",
-            normalized_value="999"
+            normalized_value="999",
         ),
     ]
 
@@ -47,28 +50,25 @@ def test_evaluation_metric_calculation():
             page_number=1,
             category="statutory_citation",
             original_value="42 U.S.C. § 1983",
-            normalized_value="42 U.S.C. § 1983"
+            normalized_value="42 U.S.C. § 1983",
         ),
         GoldAnnotation(
             document_id=doc_id,
             page_number=1,
             category="date",
             original_value="January 15, 2024",
-            normalized_value="2024-01-15"
+            normalized_value="2024-01-15",
         ),
         GoldAnnotation(
             document_id=doc_id,
             page_number=1,
             category="docket_number",
             original_value="No. 24-CV-1234",
-            normalized_value="24-CV-1234"
+            normalized_value="24-CV-1234",
         ),
     ]
 
-    result = DeterministicExtractionResult(
-        document_id=doc_id,
-        candidates=candidates
-    )
+    result = DeterministicExtractionResult(document_id=doc_id, candidates=candidates)
 
     evaluator = ExtractionEvaluator()
     report = evaluator.evaluate([result], gold_annotations)

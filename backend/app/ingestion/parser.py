@@ -21,6 +21,7 @@ from app.ingestion.ocr import OCREngineManager, OCREngineType
 
 class DoclingParseResult(BaseModel):
     """Container holding the raw Docling conversion result and parameters."""
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     conversion_result: ConversionResult
@@ -36,15 +37,11 @@ class DoclingParser:
         pass
 
     def create_converter(
-        self,
-        use_ocr: bool = True,
-        ocr_engine: OCREngineType = OCREngineType.RAPIDOCR
+        self, use_ocr: bool = True, ocr_engine: OCREngineType = OCREngineType.RAPIDOCR
     ) -> DocumentConverter:
         """Configures a DocumentConverter instance with tailored pipeline options."""
         pdf_options = OCREngineManager.get_pipeline_options(
-            use_ocr=use_ocr,
-            ocr_engine=ocr_engine,
-            do_table_structure=True
+            use_ocr=use_ocr, ocr_engine=ocr_engine, do_table_structure=True
         )
 
         format_options = {
@@ -60,7 +57,7 @@ class DoclingParser:
         file_path: Union[str, Path],
         file_type: FileType,
         use_ocr: bool = True,
-        ocr_engine: OCREngineType = OCREngineType.RAPIDOCR
+        ocr_engine: OCREngineType = OCREngineType.RAPIDOCR,
     ) -> DoclingParseResult:
         """
         Parses a document file using Docling.
@@ -72,12 +69,23 @@ class DoclingParser:
         converter = self.create_converter(use_ocr=use_ocr, ocr_engine=ocr_engine)
         conversion_result = converter.convert(str(path))
 
-        actual_ocr_used = use_ocr if file_type in (FileType.PDF, FileType.IMAGE_PNG, FileType.IMAGE_JPEG, FileType.IMAGE_TIFF, FileType.IMAGE_BMP) else False
+        actual_ocr_used = (
+            use_ocr
+            if file_type
+            in (
+                FileType.PDF,
+                FileType.IMAGE_PNG,
+                FileType.IMAGE_JPEG,
+                FileType.IMAGE_TIFF,
+                FileType.IMAGE_BMP,
+            )
+            else False
+        )
         engine_name = ocr_engine.value if actual_ocr_used else None
 
         return DoclingParseResult(
             conversion_result=conversion_result,
             file_type=file_type,
             ocr_used=actual_ocr_used,
-            ocr_engine=engine_name
+            ocr_engine=engine_name,
         )

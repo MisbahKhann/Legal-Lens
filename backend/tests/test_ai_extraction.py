@@ -13,12 +13,17 @@ from app.ingestion.models import (
     LegalTextBlock,
     ProcessingMetadata,
     FileType,
-    ProcessingStatus
+    ProcessingStatus,
 )
 from app.schema.entity_types import EntityType
 from app.schema.relationship_types import RelationshipType
 from app.schema.provenance import ExtractionMethod
-from app.extraction.ai_models import CandidateEntity, CandidateRelation, AIExtractionResult, CombinedExtractionResult
+from app.extraction.ai_models import (
+    CandidateEntity,
+    CandidateRelation,
+    AIExtractionResult,
+    CombinedExtractionResult,
+)
 from app.extraction.chunker import DocumentChunker, DocumentChunk
 from app.extraction.gliner_relex import GLiNERRelexExtractor
 from app.extraction.ai_pipeline import AIExtractionPipeline
@@ -48,10 +53,25 @@ def create_sample_legal_document() -> LegalDocument:
         raw_text=page1_text,
         normalized_text=page1_text,
         blocks=[
-            LegalTextBlock(block_id="b1_1", raw_text="Jane Doe, Plaintiff,", normalized_text="Jane Doe, Plaintiff,", page_number=1),
-            LegalTextBlock(block_id="b1_2", raw_text="v. Acme Corporation, Defendant.", normalized_text="v. Acme Corporation, Defendant.", page_number=1),
-            LegalTextBlock(block_id="b1_3", raw_text="Attorney Sarah Jenkins of Smith & Associates represents Jane Doe.", normalized_text="Attorney Sarah Jenkins of Smith & Associates represents Jane Doe.", page_number=1),
-        ]
+            LegalTextBlock(
+                block_id="b1_1",
+                raw_text="Jane Doe, Plaintiff,",
+                normalized_text="Jane Doe, Plaintiff,",
+                page_number=1,
+            ),
+            LegalTextBlock(
+                block_id="b1_2",
+                raw_text="v. Acme Corporation, Defendant.",
+                normalized_text="v. Acme Corporation, Defendant.",
+                page_number=1,
+            ),
+            LegalTextBlock(
+                block_id="b1_3",
+                raw_text="Attorney Sarah Jenkins of Smith & Associates represents Jane Doe.",
+                normalized_text="Attorney Sarah Jenkins of Smith & Associates represents Jane Doe.",
+                page_number=1,
+            ),
+        ],
     )
 
     page2 = LegalPage(
@@ -59,9 +79,19 @@ def create_sample_legal_document() -> LegalDocument:
         raw_text=page2_text,
         normalized_text=page2_text,
         blocks=[
-            LegalTextBlock(block_id="b2_1", raw_text="On January 15, 2023, Defendant Acme Corporation breached the Contract.", normalized_text="On January 15, 2023, Defendant Acme Corporation breached the Contract.", page_number=2),
-            LegalTextBlock(block_id="b2_2", raw_text="This court applies 42 U.S.C. 1983 and interprets Strict Liability standard.", normalized_text="This court applies 42 U.S.C. 1983 and interprets Strict Liability standard.", page_number=2),
-        ]
+            LegalTextBlock(
+                block_id="b2_1",
+                raw_text="On January 15, 2023, Defendant Acme Corporation breached the Contract.",
+                normalized_text="On January 15, 2023, Defendant Acme Corporation breached the Contract.",
+                page_number=2,
+            ),
+            LegalTextBlock(
+                block_id="b2_2",
+                raw_text="This court applies 42 U.S.C. 1983 and interprets Strict Liability standard.",
+                normalized_text="This court applies 42 U.S.C. 1983 and interprets Strict Liability standard.",
+                page_number=2,
+            ),
+        ],
     )
 
     proc_meta = ProcessingMetadata(
@@ -69,7 +99,7 @@ def create_sample_legal_document() -> LegalDocument:
         filename="test_motion.pdf",
         file_type=FileType.PDF,
         page_count=2,
-        processing_status=ProcessingStatus.COMPLETED
+        processing_status=ProcessingStatus.COMPLETED,
     )
 
     return LegalDocument(
@@ -80,7 +110,7 @@ def create_sample_legal_document() -> LegalDocument:
         sha256_hash="abc123hash",
         file_size_bytes=10240,
         processing_metadata=proc_meta,
-        pages=[page1, page2]
+        pages=[page1, page2],
     )
 
 
@@ -111,22 +141,55 @@ class TestGLiNERRelexExtractor:
 
         mock_prediction = {
             "entities": [
-                {"label": "PERSON", "text": "Jane Doe", "start": 0, "end": 8, "score": 0.95},
-                {"label": "COMPANY", "text": "Acme Corporation", "start": 15, "end": 31, "score": 0.92},
-                {"label": "LAWYER", "text": "Sarah Jenkins", "start": 35, "end": 48, "score": 0.88}
+                {
+                    "label": "PERSON",
+                    "text": "Jane Doe",
+                    "start": 0,
+                    "end": 8,
+                    "score": 0.95,
+                },
+                {
+                    "label": "COMPANY",
+                    "text": "Acme Corporation",
+                    "start": 15,
+                    "end": 31,
+                    "score": 0.92,
+                },
+                {
+                    "label": "LAWYER",
+                    "text": "Sarah Jenkins",
+                    "start": 35,
+                    "end": 48,
+                    "score": 0.88,
+                },
             ],
             "relations": [
                 {
-                    "head": {"label": "LAWYER", "text": "Sarah Jenkins", "start": 35, "end": 48, "score": 0.88},
-                    "tail": {"label": "PERSON", "text": "Jane Doe", "start": 0, "end": 8, "score": 0.95},
+                    "head": {
+                        "label": "LAWYER",
+                        "text": "Sarah Jenkins",
+                        "start": 35,
+                        "end": 48,
+                        "score": 0.88,
+                    },
+                    "tail": {
+                        "label": "PERSON",
+                        "text": "Jane Doe",
+                        "start": 0,
+                        "end": 8,
+                        "score": 0.95,
+                    },
                     "relation": "REPRESENTS",
-                    "score": 0.91
+                    "score": 0.91,
                 }
-            ]
+            ],
         }
 
         mock_model = MagicMock()
-        mock_model.predict_entities_and_relations.return_value = mock_prediction
+        mock_model.predict_relations.return_value = (
+            mock_prediction["entities"],
+            mock_prediction["relations"],
+        )
         extractor._model = mock_model
 
         chunk = DocumentChunk(
@@ -136,7 +199,7 @@ class TestGLiNERRelexExtractor:
             page_number=1,
             text="Jane Doe sued Acme Corporation and Sarah Jenkins represents Jane Doe.",
             start_char_offset=100,
-            end_char_offset=170
+            end_char_offset=170,
         )
 
         entities, relations = extractor.extract_from_chunk(chunk)
@@ -177,21 +240,48 @@ class TestGLiNERRelexExtractor:
         # Invalid relation: DATE cannot represent PERSON
         mock_prediction = {
             "entities": [
-                {"label": "DATE", "text": "January 15, 2023", "start": 0, "end": 16, "score": 0.95},
-                {"label": "PERSON", "text": "Jane Doe", "start": 20, "end": 28, "score": 0.95}
+                {
+                    "label": "DATE",
+                    "text": "January 15, 2023",
+                    "start": 0,
+                    "end": 16,
+                    "score": 0.95,
+                },
+                {
+                    "label": "PERSON",
+                    "text": "Jane Doe",
+                    "start": 20,
+                    "end": 28,
+                    "score": 0.95,
+                },
             ],
             "relations": [
                 {
-                    "head": {"label": "DATE", "text": "January 15, 2023", "start": 0, "end": 16, "score": 0.95},
-                    "tail": {"label": "PERSON", "text": "Jane Doe", "start": 20, "end": 28, "score": 0.95},
+                    "head": {
+                        "label": "DATE",
+                        "text": "January 15, 2023",
+                        "start": 0,
+                        "end": 16,
+                        "score": 0.95,
+                    },
+                    "tail": {
+                        "label": "PERSON",
+                        "text": "Jane Doe",
+                        "start": 20,
+                        "end": 28,
+                        "score": 0.95,
+                    },
                     "relation": "REPRESENTS",
-                    "score": 0.89
+                    "score": 0.89,
                 }
-            ]
+            ],
         }
 
         mock_model = MagicMock()
-        mock_model.predict_entities_and_relations.return_value = mock_prediction
+        mock_model.predict_relations.return_value = (
+            mock_prediction["entities"],
+            mock_prediction["relations"],
+        )
         extractor._model = mock_model
 
         chunk = DocumentChunk(
@@ -200,7 +290,7 @@ class TestGLiNERRelexExtractor:
             page_number=1,
             text="January 15, 2023 and Jane Doe.",
             start_char_offset=0,
-            end_char_offset=30
+            end_char_offset=30,
         )
 
         _, relations = extractor.extract_from_chunk(chunk)
@@ -213,7 +303,7 @@ class TestGLiNERRelexExtractor:
         """Verify duplicate chunks hit cache instead of calling model repeatedly."""
         extractor = GLiNERRelexExtractor(enable_caching=True)
         mock_model = MagicMock()
-        mock_model.predict_entities_and_relations.return_value = {"entities": [], "relations": []}
+        mock_model.predict_relations.return_value = ([], [])
         extractor._model = mock_model
 
         chunk = DocumentChunk(
@@ -222,27 +312,44 @@ class TestGLiNERRelexExtractor:
             page_number=1,
             text="Identical repeated chunk text for testing cache.",
             start_char_offset=0,
-            end_char_offset=48
+            end_char_offset=48,
         )
 
         extractor.extract_from_chunk(chunk)
         extractor.extract_from_chunk(chunk)
         extractor.extract_from_chunk(chunk)
 
-        assert mock_model.predict_entities_and_relations.call_count == 1
+        assert mock_model.predict_relations.call_count == 1
 
     def test_low_confidence_filtering(self):
         """Verify low-confidence predictions below threshold are filtered."""
-        extractor = GLiNERRelexExtractor(entity_confidence_threshold=0.80, enable_caching=False)
+        extractor = GLiNERRelexExtractor(
+            entity_confidence_threshold=0.80, enable_caching=False
+        )
         mock_prediction = {
             "entities": [
-                {"label": "PERSON", "text": "High Conf", "start": 0, "end": 9, "score": 0.90},
-                {"label": "PERSON", "text": "Low Conf", "start": 10, "end": 18, "score": 0.50}
+                {
+                    "label": "PERSON",
+                    "text": "High Conf",
+                    "start": 0,
+                    "end": 9,
+                    "score": 0.90,
+                },
+                {
+                    "label": "PERSON",
+                    "text": "Low Conf",
+                    "start": 10,
+                    "end": 18,
+                    "score": 0.50,
+                },
             ],
-            "relations": []
+            "relations": [],
         }
         mock_model = MagicMock()
-        mock_model.predict_entities_and_relations.return_value = mock_prediction
+        mock_model.predict_relations.return_value = (
+            mock_prediction["entities"],
+            mock_prediction["relations"],
+        )
         extractor._model = mock_model
 
         chunk = DocumentChunk(
@@ -251,7 +358,7 @@ class TestGLiNERRelexExtractor:
             page_number=1,
             text="High Conf Low Conf",
             start_char_offset=0,
-            end_char_offset=18
+            end_char_offset=18,
         )
 
         entities, _ = extractor.extract_from_chunk(chunk)
@@ -269,20 +376,47 @@ class TestAIExtractionPipeline:
         # Mock Step 4 extractor predictions
         mock_prediction = {
             "entities": [
-                {"label": "PERSON", "text": "Jane Doe", "start": 0, "end": 8, "score": 0.95},
-                {"label": "COMPANY", "text": "Acme Corporation", "start": 10, "end": 26, "score": 0.91}
+                {
+                    "label": "PERSON",
+                    "text": "Jane Doe",
+                    "start": 0,
+                    "end": 8,
+                    "score": 0.95,
+                },
+                {
+                    "label": "COMPANY",
+                    "text": "Acme Corporation",
+                    "start": 10,
+                    "end": 26,
+                    "score": 0.91,
+                },
             ],
             "relations": [
                 {
-                    "head": {"label": "PERSON", "text": "Jane Doe", "start": 0, "end": 8, "score": 0.95},
-                    "tail": {"label": "COMPANY", "text": "Acme Corporation", "start": 10, "end": 26, "score": 0.91},
+                    "head": {
+                        "label": "PERSON",
+                        "text": "Jane Doe",
+                        "start": 0,
+                        "end": 8,
+                        "score": 0.95,
+                    },
+                    "tail": {
+                        "label": "COMPANY",
+                        "text": "Acme Corporation",
+                        "start": 10,
+                        "end": 26,
+                        "score": 0.91,
+                    },
                     "relation": "PLAINTIFF_IN",  # Wait, PLAINTIFF_IN requires CASE target in constraints
-                    "score": 0.85
+                    "score": 0.85,
                 }
-            ]
+            ],
         }
         mock_model = MagicMock()
-        mock_model.predict_entities_and_relations.return_value = mock_prediction
+        mock_model.predict_relations.return_value = (
+            mock_prediction["entities"],
+            mock_prediction["relations"],
+        )
         pipeline.extractor._model = mock_model
 
         combined: CombinedExtractionResult = pipeline.run_pipeline(doc)
@@ -319,7 +453,7 @@ class TestAIEvaluator:
                     start_offset=0,
                     end_offset=8,
                     confidence=0.95,
-                    extraction_method=ExtractionMethod.GLINER_RELEX
+                    extraction_method=ExtractionMethod.GLINER_RELEX,
                 ),
                 CandidateEntity(
                     entity_type=EntityType.COMPANY,
@@ -330,37 +464,59 @@ class TestAIEvaluator:
                     start_offset=10,
                     end_offset=29,
                     confidence=0.90,
-                    extraction_method=ExtractionMethod.GLINER_RELEX
-                )
+                    extraction_method=ExtractionMethod.GLINER_RELEX,
+                ),
             ],
             relations=[
                 CandidateRelation(
                     relation_type=RelationshipType.REPRESENTS,
                     source_entity=CandidateEntity(
-                        entity_type=EntityType.LAWYER, text="Sarah Jenkins", document_id="d1", page_number=1, source_text="s", start_offset=0, end_offset=5, confidence=0.9, extraction_method=ExtractionMethod.GLINER_RELEX
+                        entity_type=EntityType.LAWYER,
+                        text="Sarah Jenkins",
+                        document_id="d1",
+                        page_number=1,
+                        source_text="s",
+                        start_offset=0,
+                        end_offset=5,
+                        confidence=0.9,
+                        extraction_method=ExtractionMethod.GLINER_RELEX,
                     ),
                     target_entity=CandidateEntity(
-                        entity_type=EntityType.PERSON, text="Jane Doe", document_id="d1", page_number=1, source_text="j", start_offset=6, end_offset=10, confidence=0.9, extraction_method=ExtractionMethod.GLINER_RELEX
+                        entity_type=EntityType.PERSON,
+                        text="Jane Doe",
+                        document_id="d1",
+                        page_number=1,
+                        source_text="j",
+                        start_offset=6,
+                        end_offset=10,
+                        confidence=0.9,
+                        extraction_method=ExtractionMethod.GLINER_RELEX,
                     ),
                     document_id="doc_eval_1",
                     page_number=1,
                     source_text="Sarah Jenkins represents Jane Doe",
                     confidence=0.90,
-                    extraction_method=ExtractionMethod.GLINER_RELEX
+                    extraction_method=ExtractionMethod.GLINER_RELEX,
                 )
-            ]
+            ],
         )
 
         expected_entities = [
             {"entity_type": "PERSON", "text": "Jane Doe", "page_number": 1},
-            {"entity_type": "COMPANY", "text": "Acme Corporation", "page_number": 1}
+            {"entity_type": "COMPANY", "text": "Acme Corporation", "page_number": 1},
         ]
 
         expected_relations = [
-            {"relation_type": "REPRESENTS", "source": "Sarah Jenkins", "target": "Jane Doe"}
+            {
+                "relation_type": "REPRESENTS",
+                "source": "Sarah Jenkins",
+                "target": "Jane Doe",
+            }
         ]
 
-        report: EvaluationReport = AIEvaluator.evaluate(prediction, expected_entities, expected_relations)
+        report: EvaluationReport = AIEvaluator.evaluate(
+            prediction, expected_entities, expected_relations
+        )
 
         # Entity metrics: TP=1 (Jane Doe), FP=1 (False Positive Corp), FN=1 (Acme Corporation)
         assert report.entity_metrics.true_positives == 1

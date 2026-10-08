@@ -17,11 +17,13 @@ def export_gliner_config(registry: Optional[SchemaRegistry] = None) -> Dict[str,
 
     allowed_pairs = []
     for triplet in reg.get_all_allowed_triplets():
-        allowed_pairs.append({
-            "relation": triplet["relationship_type"],
-            "head": triplet["source_type"],
-            "tail": triplet["target_type"]
-        })
+        allowed_pairs.append(
+            {
+                "relation": triplet["relationship_type"],
+                "head": triplet["source_type"],
+                "tail": triplet["target_type"],
+            }
+        )
 
     return {
         "model_type": "gliner_relex_legal_v1",
@@ -31,8 +33,5 @@ def export_gliner_config(registry: Optional[SchemaRegistry] = None) -> Dict[str,
         "num_entity_types": len(entity_labels),
         "num_relation_types": len(relation_labels),
         "num_valid_pairs": len(allowed_pairs),
-        "threshold_config": {
-            "entity_threshold": 0.50,
-            "relation_threshold": 0.55
-        }
+        "threshold_config": {"entity_threshold": 0.50, "relation_threshold": 0.55},
     }

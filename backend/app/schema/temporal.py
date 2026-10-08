@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field, model_validator
 
 class EventStatus(str, Enum):
     """Execution or compliance status for legal events, deadlines, and hearings."""
+
     PENDING = "PENDING"
     COMPLETED = "COMPLETED"
     UPCOMING = "UPCOMING"
@@ -22,25 +23,25 @@ class TemporalProperties(BaseModel):
     """
     Temporal tracking model for nodes (EVENT, HEARING, DEADLINE, DATE) or relationships.
     """
+
     event_date: Optional[datetime] = Field(
-        default=None,
-        description="Exact date and time of the event occurrence."
+        default=None, description="Exact date and time of the event occurrence."
     )
     start_date: Optional[datetime] = Field(
         default=None,
-        description="Start date/time for multi-day events, hearings, or period constraints."
+        description="Start date/time for multi-day events, hearings, or period constraints.",
     )
     end_date: Optional[datetime] = Field(
         default=None,
-        description="End date/time for multi-day events, hearings, or period constraints."
+        description="End date/time for multi-day events, hearings, or period constraints.",
     )
     deadline: Optional[datetime] = Field(
         default=None,
-        description="Mandatory due date/time associated with a filing or procedural step."
+        description="Mandatory due date/time associated with a filing or procedural step.",
     )
     status: Optional[EventStatus] = Field(
         default=EventStatus.PENDING,
-        description="Current status of the temporal event or deadline."
+        description="Current status of the temporal event or deadline.",
     )
 
     @model_validator(mode="after")

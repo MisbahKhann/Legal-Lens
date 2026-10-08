@@ -38,16 +38,14 @@ class DocumentIngestionPipeline:
         case_id: str = "default_case",
         custom_doc_id: Optional[str] = None,
         force_ocr: bool = False,
-        ocr_engine: OCREngineType = OCREngineType.RAPIDOCR
+        ocr_engine: OCREngineType = OCREngineType.RAPIDOCR,
     ) -> LegalDocument:
         """
         Main entry point for document ingestion. Processes a source file and returns a LegalDocument.
         """
         # Step 1: File Detection & Integrity Validation
         val_result, raw_bytes = self.file_handler.validate_file(
-            source=source,
-            filename=filename,
-            custom_doc_id=custom_doc_id
+            source=source, filename=filename, custom_doc_id=custom_doc_id
         )
 
         if not val_result.is_valid:
@@ -61,14 +59,14 @@ class DocumentIngestionPipeline:
             raw_bytes=raw_bytes,
             document_id=document_id,
             filename=resolved_filename,
-            storage_dir=self.storage.get_raw_storage_dir()
+            storage_dir=self.storage.get_raw_storage_dir(),
         )
 
         # Step 3: Determine Native Text vs OCR Necessity
         should_ocr, has_native = NativeTextDetector.should_use_ocr(
             file_type=val_result.file_type,
             file_source=raw_file_path,
-            force_ocr=force_ocr
+            force_ocr=force_ocr,
         )
 
         try:
@@ -77,7 +75,7 @@ class DocumentIngestionPipeline:
                 file_path=raw_file_path,
                 file_type=val_result.file_type,
                 use_ocr=should_ocr,
-                ocr_engine=ocr_engine
+                ocr_engine=ocr_engine,
             )
 
             # Step 5: Structural & Provenance Extraction
@@ -89,7 +87,7 @@ class DocumentIngestionPipeline:
                 sha256_hash=val_result.sha256_hash,
                 file_size_bytes=val_result.file_size_bytes,
                 raw_file_path=str(raw_file_path),
-                has_native_text=has_native
+                has_native_text=has_native,
             )
 
             # Step 6: Legal Text Normalization (preserving raw text)
@@ -107,4 +105,6 @@ class DocumentIngestionPipeline:
         except Exception as e:
             err_msg = f"Ingestion error: {str(e)}\n{traceback.format_exc()}"
             # Log failure state and raise
-            raise RuntimeError(f"Failed to process document {resolved_filename}: {str(e)}") from e
+            raise RuntimeError(
+                f"Failed to process document {resolved_filename}: {str(e)}"
+            ) from e

@@ -12,27 +12,24 @@ from app.schema.provenance import ExtractionMethod
 from app.extraction.base import BaseExtractor
 from app.extraction.models import ExtractedCandidateEntity
 
-
 DOCKET_PATTERNS = [
     # Federal Divisional format e.g. "3:24-cv-00123", "1:20-cv-09876-ABC", "Case No. 2:23-cr-00456"
     re.compile(
-        r'\b(?:(?:Case|Civil Action|Docket|Misc\.)\s+)?(?:No\.|#)?\s*'
-        r'(?P<docket>\d{1,2}:\d{2}-(?:cv|cr|mc|md|bk|ap)-\d{4,7}(?:-[A-Za-z0-9]+)?)\b',
-        re.IGNORECASE
+        r"\b(?:(?:Case|Civil Action|Docket|Misc\.)\s+)?(?:No\.|#)?\s*"
+        r"(?P<docket>\d{1,2}:\d{2}-(?:cv|cr|mc|md|bk|ap)-\d{4,7}(?:-[A-Za-z0-9]+)?)\b",
+        re.IGNORECASE,
     ),
-
     # Prefixed hyphenated format e.g. "No. 24-CV-1234", "Civil Action No. 2024-CV-0098", "Docket No. 22-1543"
     re.compile(
-        r'\b(?:Case|Civil Action|Docket|Civil|Criminal)\s+(?:No\.|#)\s*'
-        r'(?P<docket>[A-Za-z0-9]{1,4}[-–][A-Za-z0-9]{2,6}[-–][A-Za-z0-9]{2,7}|[0-9]{2,4}[-–][A-Za-z]{2,4}[-–][0-9]{3,6}|[0-9]{2,4}[-–][0-9]{4,7})\b',
-        re.IGNORECASE
+        r"\b(?:Case|Civil Action|Docket|Civil|Criminal)\s+(?:No\.|#)\s*"
+        r"(?P<docket>[A-Za-z0-9]{1,4}[-–][A-Za-z0-9]{2,6}[-–][A-Za-z0-9]{2,7}|[0-9]{2,4}[-–][A-Za-z]{2,4}[-–][0-9]{3,6}|[0-9]{2,4}[-–][0-9]{4,7})\b",
+        re.IGNORECASE,
     ),
-
     # Standalone "No. 24-CV-1234"
     re.compile(
-        r'\bNo\.\s*(?P<docket>[0-9]{2,4}-[A-Z]{2,4}-[0-9]{3,6}|[0-9]{2,4}-[0-9]{4,7})\b',
-        re.IGNORECASE
-    )
+        r"\bNo\.\s*(?P<docket>[0-9]{2,4}-[A-Z]{2,4}-[0-9]{3,6}|[0-9]{2,4}-[0-9]{4,7})\b",
+        re.IGNORECASE,
+    ),
 ]
 
 
@@ -51,7 +48,12 @@ class DocketExtractor(BaseExtractor):
 
     def _normalize_docket(self, raw_docket: str) -> str:
         """Standardize docket string to upper-case without leading 'No.' prefixes."""
-        cleaned = re.sub(r'^(?:Case|Civil Action|Docket|Misc\.|Civil|Criminal|No\.|#|\s)+', '', raw_docket, flags=re.IGNORECASE).strip()
+        cleaned = re.sub(
+            r"^(?:Case|Civil Action|Docket|Misc\.|Civil|Criminal|No\.|#|\s)+",
+            "",
+            raw_docket,
+            flags=re.IGNORECASE,
+        ).strip()
         cleaned = cleaned.replace("–", "-")
         return cleaned.upper()
 
@@ -97,7 +99,7 @@ class DocketExtractor(BaseExtractor):
                             category=self.category,
                             original_value=raw_match,
                             normalized_value=normalized_docket,
-                            metadata={"docket_number": normalized_docket}
+                            metadata={"docket_number": normalized_docket},
                         )
                     )
 

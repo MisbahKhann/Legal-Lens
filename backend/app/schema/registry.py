@@ -57,11 +57,13 @@ class SchemaRegistry:
         for rel_type, constraint in self._constraints.items():
             for source in constraint["sources"]:
                 for target in constraint["targets"]:
-                    triplets.append({
-                        "source_type": source.value,
-                        "relationship_type": rel_type.value,
-                        "target_type": target.value
-                    })
+                    triplets.append(
+                        {
+                            "source_type": source.value,
+                            "relationship_type": rel_type.value,
+                            "target_type": target.value,
+                        }
+                    )
         return triplets
 
     def export_full_ontology_spec(self) -> Dict[str, Any]:
@@ -72,9 +74,17 @@ class SchemaRegistry:
             "entity_types": {
                 e.value: {
                     "description": meta.get("description"),
-                    "category": meta.get("category").value if isinstance(meta.get("category"), EntityCategory) else meta.get("category"),
-                    "parent_type": meta.get("parent_type").value if meta.get("parent_type") else None,
-                    "properties": meta.get("properties", [])
+                    "category": (
+                        meta.get("category").value
+                        if isinstance(meta.get("category"), EntityCategory)
+                        else meta.get("category")
+                    ),
+                    "parent_type": (
+                        meta.get("parent_type").value
+                        if meta.get("parent_type")
+                        else None
+                    ),
+                    "properties": meta.get("properties", []),
                 }
                 for e, meta in self._entity_types.items()
             },
@@ -82,13 +92,15 @@ class SchemaRegistry:
                 r.value: {
                     "description": meta.get("description"),
                     "is_directed": meta.get("is_directed", True),
-                    "inverse": meta.get("inverse").value if meta.get("inverse") else None,
+                    "inverse": (
+                        meta.get("inverse").value if meta.get("inverse") else None
+                    ),
                     "allowed_sources": self.get_allowed_sources(r),
-                    "allowed_targets": self.get_allowed_targets(r)
+                    "allowed_targets": self.get_allowed_targets(r),
                 }
                 for r, meta in self._relationship_types.items()
             },
             "total_entity_types": len(self._entity_types),
             "total_relationship_types": len(self._relationship_types),
-            "total_allowed_triplet_rules": len(self.get_all_allowed_triplets())
+            "total_allowed_triplet_rules": len(self.get_all_allowed_triplets()),
         }

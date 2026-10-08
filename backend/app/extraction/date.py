@@ -14,27 +14,36 @@ from app.schema.provenance import ExtractionMethod
 from app.extraction.base import BaseExtractor
 from app.extraction.models import ExtractedCandidateEntity
 
-
 # Standard Month Names
-MONTHS_OR = r'(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)'
+MONTHS_OR = r"(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
 
 # Date regex patterns tailored for legal document expressions
 DATE_PATTERNS = [
     # "15th day of January, 2024" or "1st day of May 2023"
-    re.compile(r'\b(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+day\s+of\s+(?P<month>' + MONTHS_OR + r')[\.,\s]+(?P<year>\d{4})\b', re.IGNORECASE),
-
+    re.compile(
+        r"\b(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+day\s+of\s+(?P<month>"
+        + MONTHS_OR
+        + r")[\.,\s]+(?P<year>\d{4})\b",
+        re.IGNORECASE,
+    ),
     # "January 15, 2024", "Jan 15, 2024", "January 15th, 2024"
-    re.compile(r'\b(?P<month>' + MONTHS_OR + r')[\.,\s]+(?P<day>\d{1,2})(?:st|nd|rd|th)?[\.,\s]+(?P<year>\d{4})\b', re.IGNORECASE),
-
+    re.compile(
+        r"\b(?P<month>"
+        + MONTHS_OR
+        + r")[\.,\s]+(?P<day>\d{1,2})(?:st|nd|rd|th)?[\.,\s]+(?P<year>\d{4})\b",
+        re.IGNORECASE,
+    ),
     # "15 January 2024", "15 Jan 2024"
-    re.compile(r'\b(?P<day>\d{1,2})[\.,\s]+(?P<month>' + MONTHS_OR + r')[\.,\s]+(?P<year>\d{4})\b', re.IGNORECASE),
-
+    re.compile(
+        r"\b(?P<day>\d{1,2})[\.,\s]+(?P<month>"
+        + MONTHS_OR
+        + r")[\.,\s]+(?P<year>\d{4})\b",
+        re.IGNORECASE,
+    ),
     # Numeric ISO format "2024-01-15"
-    re.compile(r'\b(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})\b'),
-
+    re.compile(r"\b(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})\b"),
     # US Numeric format "01/15/2024" or "1/15/2024"
-    re.compile(r'\b(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<year>\d{4})\b'),
-
+    re.compile(r"\b(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<year>\d{4})\b"),
     # Prefix dates like "Dated: October 5, 2023" (captured by pattern 2 as well)
 ]
 
@@ -55,17 +64,17 @@ class DateExtractor(BaseExtractor):
     def _normalize_date(self, date_str: str) -> Optional[str]:
         """Attempt robust parsing to YYYY-MM-DD using dateparser / datetime."""
         # Clean ordinals (1st -> 1, 15th -> 15) and "day of"
-        cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_str, flags=re.IGNORECASE)
-        cleaned = re.sub(r'day\s+of\s+', '', cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"(\d+)(st|nd|rd|th)", r"\1", date_str, flags=re.IGNORECASE)
+        cleaned = re.sub(r"day\s+of\s+", "", cleaned, flags=re.IGNORECASE)
 
         try:
             parsed = dateparser.parse(
                 cleaned,
                 settings={
-                    'PREFER_DAY_OF_MONTH': 'first',
-                    'REQUIRE_PARTS': ['year', 'month', 'day'],
-                    'DATE_ORDER': 'MDY'
-                }
+                    "PREFER_DAY_OF_MONTH": "first",
+                    "REQUIRE_PARTS": ["year", "month", "day"],
+                    "DATE_ORDER": "MDY",
+                },
             )
             if parsed and 1800 <= parsed.year <= 2100:
                 return parsed.strftime("%Y-%m-%d")
@@ -119,7 +128,10 @@ class DateExtractor(BaseExtractor):
                             category=self.category,
                             original_value=raw_match,
                             normalized_value=iso_date,
-                            metadata={"iso_format": iso_date, "raw_expression": raw_match}
+                            metadata={
+                                "iso_format": iso_date,
+                                "raw_expression": raw_match,
+                            },
                         )
                     )
 

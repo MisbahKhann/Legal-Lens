@@ -47,7 +47,11 @@ class CaseCitationExtractor(BaseExtractor):
                 start_offset, end_offset = span if span else (0, 0)
 
                 # Original matched text
-                orig_text = text[start_offset:end_offset] if span and 0 <= start_offset < end_offset <= len(text) else str(cit)
+                orig_text = (
+                    text[start_offset:end_offset]
+                    if span and 0 <= start_offset < end_offset <= len(text)
+                    else str(cit)
+                )
 
                 # Normalized representation
                 groups = getattr(cit, "groups", {}) or {}
@@ -57,7 +61,9 @@ class CaseCitationExtractor(BaseExtractor):
 
                 if volume and reporter and page_num:
                     normalized_val = f"{volume} {reporter} {page_num}"
-                elif hasattr(cit, "corrected_citation") and callable(cit.corrected_citation):
+                elif hasattr(cit, "corrected_citation") and callable(
+                    cit.corrected_citation
+                ):
                     normalized_val = cit.corrected_citation()
                 else:
                     normalized_val = orig_text.strip()
@@ -99,7 +105,7 @@ class CaseCitationExtractor(BaseExtractor):
                         category=self.category,
                         original_value=orig_text,
                         normalized_value=normalized_val,
-                        metadata=metadata
+                        metadata=metadata,
                     )
                 )
 

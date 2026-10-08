@@ -8,7 +8,6 @@ import re
 import unicodedata
 from app.ingestion.models import LegalDocument, LegalPage, LegalTextBlock
 
-
 LIGATURE_MAP = {
     "ﬁ": "fi",
     "ﬂ": "fl",
@@ -46,10 +45,16 @@ class LegalTextNormalizer:
             normalized = normalized.replace(lig, repl)
 
         # 3. Strip unprintable control characters (except newlines and tabs)
-        normalized = "".join(ch for ch in normalized if ch == "\n" or ch == "\t" or unicodedata.category(ch)[0] != "C")
+        normalized = "".join(
+            ch
+            for ch in normalized
+            if ch == "\n" or ch == "\t" or unicodedata.category(ch)[0] != "C"
+        )
 
         # 4. Repair line-break hyphenations (e.g. "juris-\ndiction" -> "jurisdiction")
-        normalized = re.sub(r"(\b[a-zA-Z]{2,})-\s*\n\s*([a-zA-Z]{2,}\b)", r"\1\2", normalized)
+        normalized = re.sub(
+            r"(\b[a-zA-Z]{2,})-\s*\n\s*([a-zA-Z]{2,}\b)", r"\1\2", normalized
+        )
 
         # 5. Clean multi-spaces within lines while preserving single spacing
         lines = []
@@ -74,7 +79,11 @@ class LegalTextNormalizer:
                 block.normalized_text = self.normalize_text(block.raw_text)
                 normalized_block_texts.append(block.normalized_text)
 
-            table_texts = [self.normalize_text(t.markdown_content) for t in page.tables if t.markdown_content]
+            table_texts = [
+                self.normalize_text(t.markdown_content)
+                for t in page.tables
+                if t.markdown_content
+            ]
             page.normalized_text = "\n\n".join(normalized_block_texts + table_texts)
 
         return document

@@ -30,11 +30,31 @@ from app.schema.exporters import (
 class TestEntityTypeAndHierarchy:
     def test_all_25_entity_types_exist(self):
         expected_types = {
-            "CASE", "PERSON", "LAWYER", "JUDGE", "WITNESS",
-            "ORGANIZATION", "COMPANY", "LAW_FIRM", "GOVERNMENT_AGENCY", "COURT",
-            "STATUTE", "REGULATION", "LEGAL_CONCEPT", "LEGAL_ISSUE", "CLAIM",
-            "DOCUMENT", "CONTRACT", "EVIDENCE", "EXHIBIT", "FILING",
-            "TESTIMONY", "EVENT", "DATE", "DEADLINE", "HEARING"
+            "CASE",
+            "PERSON",
+            "LAWYER",
+            "JUDGE",
+            "WITNESS",
+            "ORGANIZATION",
+            "COMPANY",
+            "LAW_FIRM",
+            "GOVERNMENT_AGENCY",
+            "COURT",
+            "STATUTE",
+            "REGULATION",
+            "LEGAL_CONCEPT",
+            "LEGAL_ISSUE",
+            "CLAIM",
+            "DOCUMENT",
+            "CONTRACT",
+            "EVIDENCE",
+            "EXHIBIT",
+            "FILING",
+            "TESTIMONY",
+            "EVENT",
+            "DATE",
+            "DEADLINE",
+            "HEARING",
         }
         actual_types = {e.value for e in EntityType}
         assert actual_types == expected_types
@@ -58,11 +78,30 @@ class TestEntityTypeAndHierarchy:
 class TestRelationshipTypes:
     def test_all_24_relationship_types_exist(self):
         expected_rels = {
-            "PLAINTIFF_IN", "DEFENDANT_IN", "REPRESENTED_BY", "DECIDED_BY", "FILED_IN",
-            "CITES", "APPLIES", "INTERPRETS", "OVERRULES", "FOLLOWS",
-            "DISTINGUISHES", "SUPPORTED_BY", "CONTRADICTED_BY", "EVIDENCED_BY", "MENTIONED_IN",
-            "WORKS_FOR", "EMPLOYED_BY", "OWNS", "REPRESENTS", "OCCURRED_ON",
-            "OCCURRED_IN", "BEFORE", "AFTER", "HAS_DEADLINE"
+            "PLAINTIFF_IN",
+            "DEFENDANT_IN",
+            "REPRESENTED_BY",
+            "DECIDED_BY",
+            "FILED_IN",
+            "CITES",
+            "APPLIES",
+            "INTERPRETS",
+            "OVERRULES",
+            "FOLLOWS",
+            "DISTINGUISHES",
+            "SUPPORTED_BY",
+            "CONTRADICTED_BY",
+            "EVIDENCED_BY",
+            "MENTIONED_IN",
+            "WORKS_FOR",
+            "EMPLOYED_BY",
+            "OWNS",
+            "REPRESENTS",
+            "OCCURRED_ON",
+            "OCCURRED_IN",
+            "BEFORE",
+            "AFTER",
+            "HAS_DEADLINE",
         }
         actual_rels = {r.value for r in RelationshipType}
         assert actual_rels == expected_rels
@@ -90,7 +129,10 @@ class TestTripletConstraints:
     def test_subtype_inheritance_in_triplets(self):
         # LAWYER is a subtype of PERSON, so LAWYER can be PLAINTIFF_IN CASE
         assert SchemaValidator.validate_triplet(
-            EntityType.LAWYER, RelationshipType.PLAINTIFF_IN, EntityType.CASE, allow_subtype_inheritance=True
+            EntityType.LAWYER,
+            RelationshipType.PLAINTIFF_IN,
+            EntityType.CASE,
+            allow_subtype_inheritance=True,
         )
 
     def test_invalid_triplet_rejection(self):
@@ -115,32 +157,21 @@ class TestProvenanceValidation:
             char_span=(10, 35),
             confidence=0.98,
             extraction_method=ExtractionMethod.GLINER_RELEX,
-            created_by="gliner_agent"
+            created_by="gliner_agent",
         )
         SchemaValidator.validate_provenance(prov)
         assert prov.confidence == 0.98
 
     def test_invalid_confidence_out_of_bounds(self):
         with pytest.raises(ValueError):
-            Provenance(
-                case_id="case-1",
-                source_document_id="doc-1",
-                confidence=1.5
-            )
+            Provenance(case_id="case-1", source_document_id="doc-1", confidence=1.5)
 
     def test_invalid_char_span_start_greater_than_end(self):
         with pytest.raises(ValueError):
-            Provenance(
-                case_id="case-1",
-                source_document_id="doc-1",
-                char_span=(50, 20)
-            )
+            Provenance(case_id="case-1", source_document_id="doc-1", char_span=(50, 20))
 
     def test_empty_case_id_rejection(self):
-        prov = Provenance(
-            case_id="",
-            source_document_id="doc-1"
-        )
+        prov = Provenance(case_id="", source_document_id="doc-1")
         with pytest.raises(ProvenanceValidationError):
             SchemaValidator.validate_provenance(prov)
 
@@ -150,9 +181,7 @@ class TestTemporalValidation:
         now = datetime.now(timezone.utc)
         later = now + timedelta(days=5)
         temp = TemporalProperties(
-            start_date=now,
-            end_date=later,
-            status=EventStatus.UPCOMING
+            start_date=now, end_date=later, status=EventStatus.UPCOMING
         )
         SchemaValidator.validate_temporal(temp)
 
@@ -160,17 +189,11 @@ class TestTemporalValidation:
         now = datetime.now(timezone.utc)
         earlier = now - timedelta(days=5)
         with pytest.raises(ValueError):
-            TemporalProperties(
-                start_date=now,
-                end_date=earlier
-            )
+            TemporalProperties(start_date=now, end_date=earlier)
 
     def test_overdue_deadline_check(self):
         past_deadline = datetime.now(timezone.utc) - timedelta(days=2)
-        temp = TemporalProperties(
-            deadline=past_deadline,
-            status=EventStatus.PENDING
-        )
+        temp = TemporalProperties(deadline=past_deadline, status=EventStatus.PENDING)
         assert temp.check_is_overdue() is True
 
 
@@ -183,8 +206,8 @@ class TestLegalNodeAndRelationshipModels:
             provenance=Provenance(
                 case_id="case-999",
                 source_document_id="doc-888",
-                extraction_method=ExtractionMethod.MANUAL_HUMAN
-            )
+                extraction_method=ExtractionMethod.MANUAL_HUMAN,
+            ),
         )
         SchemaValidator.validate_node(node)
         assert node.entity_type == EntityType.JUDGE
@@ -196,10 +219,7 @@ class TestLegalNodeAndRelationshipModels:
             relationship_type=RelationshipType.REPRESENTS,
             target_id="person-1",
             target_type=EntityType.PERSON,
-            provenance=Provenance(
-                case_id="case-999",
-                source_document_id="doc-888"
-            )
+            provenance=Provenance(case_id="case-999", source_document_id="doc-888"),
         )
         SchemaValidator.validate_relationship(rel)
         assert rel.triplet.source_type == EntityType.LAWYER

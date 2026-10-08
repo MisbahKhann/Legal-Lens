@@ -9,7 +9,12 @@ from pathlib import Path
 import uuid
 
 from docling.datamodel.base_models import DocItemLabel
-from docling.datamodel.document import DoclingDocument, TextItem, TableItem, SectionHeaderItem
+from docling.datamodel.document import (
+    DoclingDocument,
+    TextItem,
+    TableItem,
+    SectionHeaderItem,
+)
 
 from app.ingestion.models import (
     LegalDocument,
@@ -27,7 +32,6 @@ from app.ingestion.models import (
 )
 from app.ingestion.parser import DoclingParseResult
 from app.schema.provenance import Provenance, ExtractionMethod
-
 
 LABEL_MAPPING = {
     DocItemLabel.TITLE: TextBlockType.HEADING,
@@ -67,7 +71,7 @@ class StructureExtractor:
                     r=float(r),
                     b=float(bottom),
                     page_number=page_no,
-                    coord_origin=coord_origin
+                    coord_origin=coord_origin,
                 )
         return None
 
@@ -80,15 +84,19 @@ class StructureExtractor:
         sha256_hash: str,
         file_size_bytes: int,
         raw_file_path: Optional[str] = None,
-        has_native_text: bool = True
+        has_native_text: bool = True,
     ) -> LegalDocument:
         """
         Translates a Docling parse result into a standardized LegalDocument instance.
         """
         docling_doc: DoclingDocument = parse_result.conversion_result.document
-        
+
         # Determine total page count
-        page_count = len(docling_doc.pages) if hasattr(docling_doc, "pages") and docling_doc.pages else 1
+        page_count = (
+            len(docling_doc.pages)
+            if hasattr(docling_doc, "pages") and docling_doc.pages
+            else 1
+        )
         if page_count < 1:
             page_count = 1
 
@@ -100,7 +108,7 @@ class StructureExtractor:
                 if hasattr(page_obj, "size") and page_obj.size:
                     w = float(getattr(page_obj.size, "width", 0.0))
                     h = float(getattr(page_obj.size, "height", 0.0))
-            
+
             pages_map[p_num] = LegalPage(
                 page_number=p_num,
                 width=w,
@@ -108,7 +116,7 @@ class StructureExtractor:
                 has_native_text=has_native_text,
                 ocr_applied=parse_result.ocr_used,
                 blocks=[],
-                tables=[]
+                tables=[],
             )
 
         extracted_blocks: List[LegalTextBlock] = []
@@ -135,11 +143,15 @@ class StructureExtractor:
                 pages_map[page_no] = LegalPage(
                     page_number=page_no,
                     has_native_text=has_native_text,
-                    ocr_applied=parse_result.ocr_used
+                    ocr_applied=parse_result.ocr_used,
                 )
 
             bbox = self.extract_bbox(item, page_no)
-            heading_level = getattr(item, "level", None) if block_type == TextBlockType.HEADING else None
+            heading_level = (
+                getattr(item, "level", None)
+                if block_type == TextBlockType.HEADING
+                else None
+            )
 
             # Build provenance
             prov_obj = Provenance(
@@ -148,7 +160,7 @@ class StructureExtractor:
                 source_page=page_no,
                 source_text=raw_text[:500],  # sample quote
                 extraction_method=ExtractionMethod.DETERMINISTIC_RULE,
-                created_by="ingestion_pipeline"
+                created_by="ingestion_pipeline",
             )
 
             block = LegalTextBlock(
@@ -159,7 +171,7 @@ class StructureExtractor:
                 page_number=page_no,
                 level=heading_level,
                 bbox=bbox,
-                provenance=prov_obj
+                provenance=prov_obj,
             )
 
             extracted_blocks.append(block)
@@ -194,7 +206,10 @@ class StructureExtractor:
                             row_span=getattr(c, "row_span", 1),
                             col_span=getattr(c, "col_span", 1),
                             text=getattr(c, "text", "").strip(),
-                            is_header=bool(getattr(c, "column_header", False) or getattr(c, "row_header", False))
+                            is_header=bool(
+                                getattr(c, "column_header", False)
+                                or getattr(c, "row_header", False)
+                            ),
                         )
                     )
 
@@ -217,7 +232,7 @@ class StructureExtractor:
                 csv_content=csv_content,
                 markdown_content=md_content,
                 bbox=bbox,
-                caption=getattr(tbl, "caption", None)
+                caption=getattr(tbl, "caption", None),
             )
             pages_map[page_no].tables.append(legal_table)
 
@@ -240,12 +255,11 @@ class StructureExtractor:
             ocr_used=parse_result.ocr_used,
             ocr_engine=parse_result.ocr_engine,
             processing_status=ProcessingStatus.PARSING,
-            started_at=datetime.now(timezone.utc)
+            started_at=datetime.now(timezone.utc),
         )
 
         doc_metadata = DocumentMetadata(
-            title=getattr(docling_doc, "name", filename),
-            language="en"
+            title=getattr(docling_doc, "name", filename), language="en"
         )
 
         sorted_pages = [pages_map[k] for k in sorted(pages_map.keys())]
@@ -261,7 +275,7 @@ class StructureExtractor:
             document_metadata=doc_metadata,
             processing_metadata=proc_metadata,
             pages=sorted_pages,
-            sections=sections
+            sections=sections,
         )
 
     def build_sections(self, blocks: List[LegalTextBlock]) -> List[LegalSection]:
@@ -274,7 +288,7 @@ class StructureExtractor:
             if block.block_type == TextBlockType.HEADING:
                 if current_section:
                     sections.append(current_section)
-                
+
                 sec_counter += 1
                 current_section = LegalSection(
                     section_id=f"sec_{sec_counter:03d}",
@@ -282,7 +296,7 @@ class StructureExtractor:
                     level=block.level or 1,
                     page_start=block.page_number,
                     page_end=block.page_number,
-                    block_ids=[block.block_id]
+                    block_ids=[block.block_id],
                 )
             else:
                 if not current_section:
@@ -293,10 +307,12 @@ class StructureExtractor:
                         level=1,
                         page_start=block.page_number,
                         page_end=block.page_number,
-                        block_ids=[]
+                        block_ids=[],
                     )
                 current_section.block_ids.append(block.block_id)
-                current_section.page_end = max(current_section.page_end, block.page_number)
+                current_section.page_end = max(
+                    current_section.page_end, block.page_number
+                )
 
         if current_section:
             sections.append(current_section)

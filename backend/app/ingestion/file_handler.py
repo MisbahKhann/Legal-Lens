@@ -11,7 +11,6 @@ from pydantic import BaseModel, Field
 
 from app.ingestion.models import FileType
 
-
 MAGIC_SIGNATURES = {
     FileType.PDF: [b"%PDF-"],
     FileType.DOCX: [b"PK\x03\x04"],
@@ -63,7 +62,7 @@ class FileHandler:
         self,
         source: Union[str, Path, bytes, BinaryIO],
         filename: Optional[str] = None,
-        custom_doc_id: Optional[str] = None
+        custom_doc_id: Optional[str] = None,
     ) -> Tuple[FileValidationResult, bytes]:
         """
         Validates the input document source. Returns validation result and raw bytes.
@@ -74,15 +73,18 @@ class FileHandler:
         if isinstance(source, (str, Path)):
             path = Path(source)
             if not path.is_file():
-                return FileValidationResult(
-                    is_valid=False,
-                    document_id=doc_id,
-                    file_type=FileType.UNKNOWN,
-                    filename=filename or path.name,
-                    file_size_bytes=0,
-                    sha256_hash="",
-                    error_message=f"File not found: {source}"
-                ), b""
+                return (
+                    FileValidationResult(
+                        is_valid=False,
+                        document_id=doc_id,
+                        file_type=FileType.UNKNOWN,
+                        filename=filename or path.name,
+                        file_size_bytes=0,
+                        sha256_hash="",
+                        error_message=f"File not found: {source}",
+                    ),
+                    b"",
+                )
             resolved_filename = filename or path.name
             with open(path, "rb") as f:
                 raw_bytes = f.read()
@@ -93,68 +95,83 @@ class FileHandler:
             resolved_filename = filename or f"upload_{doc_id}.bin"
             raw_bytes = source.read()
         else:
-            return FileValidationResult(
-                is_valid=False,
-                document_id=doc_id,
-                file_type=FileType.UNKNOWN,
-                filename=filename or "unknown",
-                file_size_bytes=0,
-                sha256_hash="",
-                error_message="Unsupported input source type."
-            ), b""
+            return (
+                FileValidationResult(
+                    is_valid=False,
+                    document_id=doc_id,
+                    file_type=FileType.UNKNOWN,
+                    filename=filename or "unknown",
+                    file_size_bytes=0,
+                    sha256_hash="",
+                    error_message="Unsupported input source type.",
+                ),
+                b"",
+            )
 
         size = len(raw_bytes)
         if size == 0:
-            return FileValidationResult(
-                is_valid=False,
-                document_id=doc_id,
-                file_type=FileType.UNKNOWN,
-                filename=resolved_filename,
-                file_size_bytes=0,
-                sha256_hash="",
-                error_message="Uploaded file is empty (0 bytes)."
-            ), b""
+            return (
+                FileValidationResult(
+                    is_valid=False,
+                    document_id=doc_id,
+                    file_type=FileType.UNKNOWN,
+                    filename=resolved_filename,
+                    file_size_bytes=0,
+                    sha256_hash="",
+                    error_message="Uploaded file is empty (0 bytes).",
+                ),
+                b"",
+            )
 
         if size > self.max_file_size_bytes:
-            return FileValidationResult(
-                is_valid=False,
-                document_id=doc_id,
-                file_type=FileType.UNKNOWN,
-                filename=resolved_filename,
-                file_size_bytes=size,
-                sha256_hash="",
-                error_message=f"File size ({size} bytes) exceeds limit of {self.max_file_size_bytes} bytes."
-            ), b""
+            return (
+                FileValidationResult(
+                    is_valid=False,
+                    document_id=doc_id,
+                    file_type=FileType.UNKNOWN,
+                    filename=resolved_filename,
+                    file_size_bytes=size,
+                    sha256_hash="",
+                    error_message=f"File size ({size} bytes) exceeds limit of {self.max_file_size_bytes} bytes.",
+                ),
+                b"",
+            )
 
         file_type = self.detect_file_type(raw_bytes[:32], resolved_filename)
         if file_type == FileType.UNKNOWN:
-            return FileValidationResult(
-                is_valid=False,
-                document_id=doc_id,
-                file_type=FileType.UNKNOWN,
-                filename=resolved_filename,
-                file_size_bytes=size,
-                sha256_hash="",
-                error_message=f"Unsupported file format for file: {resolved_filename}"
-            ), b""
+            return (
+                FileValidationResult(
+                    is_valid=False,
+                    document_id=doc_id,
+                    file_type=FileType.UNKNOWN,
+                    filename=resolved_filename,
+                    file_size_bytes=size,
+                    sha256_hash="",
+                    error_message=f"Unsupported file format for file: {resolved_filename}",
+                ),
+                b"",
+            )
 
         sha256_hash = hashlib.sha256(raw_bytes).hexdigest()
 
-        return FileValidationResult(
-            is_valid=True,
-            document_id=doc_id,
-            file_type=file_type,
-            filename=resolved_filename,
-            file_size_bytes=size,
-            sha256_hash=sha256_hash
-        ), raw_bytes
+        return (
+            FileValidationResult(
+                is_valid=True,
+                document_id=doc_id,
+                file_type=file_type,
+                filename=resolved_filename,
+                file_size_bytes=size,
+                sha256_hash=sha256_hash,
+            ),
+            raw_bytes,
+        )
 
     def save_raw_file(
         self,
         raw_bytes: bytes,
         document_id: str,
         filename: str,
-        storage_dir: Union[str, Path]
+        storage_dir: Union[str, Path],
     ) -> Path:
         """
         Saves original uploaded binary file to storage without modification.

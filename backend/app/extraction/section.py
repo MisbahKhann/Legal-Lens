@@ -12,31 +12,26 @@ from app.schema.provenance import ExtractionMethod
 from app.extraction.base import BaseExtractor
 from app.extraction.models import ExtractedCandidateEntity
 
-
 SECTION_PATTERNS = [
     # Section symbol references: "§ 1983", "§§ 101-105"
     re.compile(
-        r'(?:^|[\s\(\[\{,;])(?P<prefix>§+)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)',
-        re.IGNORECASE
+        r"(?:^|[\s\(\[\{,;])(?P<prefix>§+)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)",
+        re.IGNORECASE,
     ),
-
     # Named section references: "Section 12", "Sec. 4(a)"
     re.compile(
-        r'\b(?P<prefix>Sec(?:tion|\.)?)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)',
-        re.IGNORECASE
+        r"\b(?P<prefix>Sec(?:tion|\.)?)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)",
+        re.IGNORECASE,
     ),
-
     # Article references: "Article III", "Art. I", "Article 5"
     re.compile(
-        r'\b(?P<prefix>Article|Art\.)\s*(?P<num>[IVXLCDM\d]+[a-zA-Z0-9\-\.\(\)]*)',
-        re.IGNORECASE
+        r"\b(?P<prefix>Article|Art\.)\s*(?P<num>[IVXLCDM\d]+[a-zA-Z0-9\-\.\(\)]*)",
+        re.IGNORECASE,
     ),
-
     # Clause references: "Clause 2", "Cl. 1"
     re.compile(
-        r'\b(?P<prefix>Clause|Cl\.)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)',
-        re.IGNORECASE
-    )
+        r"\b(?P<prefix>Clause|Cl\.)\s*(?P<num>\d+[a-zA-Z0-9\-\.\(\)]*)", re.IGNORECASE
+    ),
 ]
 
 
@@ -85,12 +80,16 @@ class SectionExtractor(BaseExtractor):
                     # Adjust start/end for leading whitespace captured in non-word boundary
                     raw_full = match.group(0)
                     prefix_start_in_match = raw_full.find(prefix)
-                    start = match.start() + (prefix_start_in_match if prefix_start_in_match > 0 else 0)
+                    start = match.start() + (
+                        prefix_start_in_match if prefix_start_in_match > 0 else 0
+                    )
                     end = match.end()
 
                     num_clean = num.rstrip(".,;:")
-                    if raw_full.endswith((".", ",", ";", ":")) and not num_clean.endswith(raw_full[-1]):
-                        end -= (len(num) - len(num_clean))
+                    if raw_full.endswith(
+                        (".", ",", ";", ":")
+                    ) and not num_clean.endswith(raw_full[-1]):
+                        end -= len(num) - len(num_clean)
 
                     if any(s <= start < e or s < end <= e for s, e in extracted_spans):
                         continue
@@ -119,7 +118,10 @@ class SectionExtractor(BaseExtractor):
                             category=self.category,
                             original_value=raw_match,
                             normalized_value=normalized_val,
-                            metadata={"reference_type": prefix.strip(), "number": num_clean}
+                            metadata={
+                                "reference_type": prefix.strip(),
+                                "number": num_clean,
+                            },
                         )
                     )
 

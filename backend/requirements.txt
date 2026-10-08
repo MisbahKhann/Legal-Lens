@@ -1,0 +1,14 @@
+dateparser
+docling
+python-docx
+eyecite
+gliner
+pillow
+pydantic
+pypdf
+pytest
+reportlab
+torch
+transformers
+onnxruntime
+rapidocr-onnxruntime

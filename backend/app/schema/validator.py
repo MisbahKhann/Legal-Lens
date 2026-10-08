@@ -14,31 +14,37 @@ from app.schema.temporal import TemporalProperties
 
 class SchemaValidationError(Exception):
     """Base exception for all schema validation failures."""
+
     pass
 
 
 class InvalidEntityTypeError(SchemaValidationError):
     """Raised when an unrecognized entity type string is supplied."""
+
     pass
 
 
 class InvalidRelationshipTypeError(SchemaValidationError):
     """Raised when an unrecognized relationship type string is supplied."""
+
     pass
 
 
 class TripletConstraintViolationError(SchemaValidationError):
     """Raised when a relationship violates allowed (source_type, rel_type, target_type) constraints."""
+
     pass
 
 
 class ProvenanceValidationError(SchemaValidationError):
     """Raised when provenance metadata is incomplete or invalid."""
+
     pass
 
 
 class TemporalValidationError(SchemaValidationError):
     """Raised when temporal metadata contains logical contradictions."""
+
     pass
 
 
@@ -79,11 +85,11 @@ class SchemaValidator:
         source_type: EntityType,
         relationship_type: RelationshipType,
         target_type: EntityType,
-        allow_subtype_inheritance: bool = True
+        allow_subtype_inheritance: bool = True,
     ) -> bool:
         """
         Validates if (source_type, relationship_type, target_type) is permitted.
-        
+
         Args:
             source_type: Source entity type enum
             relationship_type: Relationship type enum
@@ -138,9 +144,7 @@ class SchemaValidator:
 
     @classmethod
     def validate_relationship(
-        cls,
-        relationship: LegalRelationship,
-        allow_subtype_inheritance: bool = True
+        cls, relationship: LegalRelationship, allow_subtype_inheritance: bool = True
     ) -> None:
         """Validates a LegalRelationship instance including triplet constraints, provenance, and temporal properties."""
         cls.validate_entity_type(relationship.source_type.value)
@@ -151,7 +155,7 @@ class SchemaValidator:
             source_type=relationship.source_type,
             relationship_type=relationship.relationship_type,
             target_type=relationship.target_type,
-            allow_subtype_inheritance=allow_subtype_inheritance
+            allow_subtype_inheritance=allow_subtype_inheritance,
         )
 
         cls.validate_provenance(relationship.provenance)
@@ -163,10 +167,17 @@ class SchemaValidator:
         """Validates provenance fields."""
         if not provenance.case_id or not provenance.case_id.strip():
             raise ProvenanceValidationError("Provenance case_id cannot be empty.")
-        if not provenance.source_document_id or not provenance.source_document_id.strip():
-            raise ProvenanceValidationError("Provenance source_document_id cannot be empty.")
+        if (
+            not provenance.source_document_id
+            or not provenance.source_document_id.strip()
+        ):
+            raise ProvenanceValidationError(
+                "Provenance source_document_id cannot be empty."
+            )
         if not (0.0 <= provenance.confidence <= 1.0):
-            raise ProvenanceValidationError(f"Confidence score {provenance.confidence} out of range [0.0, 1.0].")
+            raise ProvenanceValidationError(
+                f"Confidence score {provenance.confidence} out of range [0.0, 1.0]."
+            )
 
     @classmethod
     def validate_temporal(cls, temporal: TemporalProperties) -> None:

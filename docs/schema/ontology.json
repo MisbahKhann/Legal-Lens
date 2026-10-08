@@ -1,0 +1,701 @@
+{
+  "version": "1.0.0",
+  "title": "US Legal Case Knowledge Graph Schema Spec",
+  "entity_types": {
+    "CASE": {
+      "description": "A judicial proceeding, litigation matter, or lawsuit identified by case title/docket number.",
+      "category": "CASE_MATTER",
+      "parent_type": null,
+      "properties": [
+        "docket_number",
+        "citation",
+        "jurisdiction",
+        "court_name",
+        "status"
+      ]
+    },
+    "PERSON": {
+      "description": "An individual human being relevant to the legal proceeding.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": null,
+      "properties": [
+        "full_name",
+        "first_name",
+        "last_name",
+        "role",
+        "alias"
+      ]
+    },
+    "LAWYER": {
+      "description": "An attorney or legal practitioner representing a party or appearing in court.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "PERSON",
+      "properties": [
+        "bar_number",
+        "firm_affiliation",
+        "specialty"
+      ]
+    },
+    "JUDGE": {
+      "description": "A judicial officer who presides over court proceedings and rulings.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "PERSON",
+      "properties": [
+        "title",
+        "court_chamber",
+        "appointment_type"
+      ]
+    },
+    "WITNESS": {
+      "description": "An individual who gives testimony or provides sworn statements under oath.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "PERSON",
+      "properties": [
+        "witness_type",
+        "expertise_area",
+        "subpoena_status"
+      ]
+    },
+    "ORGANIZATION": {
+      "description": "A generic legal or corporate entity, institution, or collective body.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": null,
+      "properties": [
+        "org_name",
+        "org_type",
+        "state_of_incorporation"
+      ]
+    },
+    "COMPANY": {
+      "description": "A commercial business organization, corporation, LLC, or partnership.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "ORGANIZATION",
+      "properties": [
+        "ticker_symbol",
+        "industry",
+        "ein"
+      ]
+    },
+    "LAW_FIRM": {
+      "description": "A legal practice entity comprising one or more attorneys offering legal services.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "ORGANIZATION",
+      "properties": [
+        "firm_name",
+        "office_locations",
+        "website"
+      ]
+    },
+    "GOVERNMENT_AGENCY": {
+      "description": "A public administrative or executive agency, board, or municipal entity.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": "ORGANIZATION",
+      "properties": [
+        "agency_level",
+        "jurisdiction",
+        "regulatory_scope"
+      ]
+    },
+    "COURT": {
+      "description": "A judicial tribunal established to hear and adjudicate legal disputes.",
+      "category": "PARTY_LEGAL_ACTOR",
+      "parent_type": null,
+      "properties": [
+        "court_name",
+        "court_level",
+        "district_circuit",
+        "jurisdiction"
+      ]
+    },
+    "STATUTE": {
+      "description": "A formal written enactment of a legislative body (e.g., U.S. Code, state statutes).",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "parent_type": null,
+      "properties": [
+        "statute_citation",
+        "code_section",
+        "title",
+        "enacting_body"
+      ]
+    },
+    "REGULATION": {
+      "description": "A rule or administrative order promulgated by a regulatory agency (e.g., CFR).",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "parent_type": null,
+      "properties": [
+        "cfr_citation",
+        "issuing_agency",
+        "effective_date"
+      ]
+    },
+    "LEGAL_CONCEPT": {
+      "description": "An established legal principle, doctrine, test, or standard (e.g., Strict Liability, Res Judicata).",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "parent_type": null,
+      "properties": [
+        "concept_name",
+        "domain",
+        "defining_case"
+      ]
+    },
+    "LEGAL_ISSUE": {
+      "description": "A specific legal question or disputed matter of law raised in a case.",
+      "category": "CASE_MATTER",
+      "parent_type": null,
+      "properties": [
+        "issue_description",
+        "area_of_law",
+        "disposition"
+      ]
+    },
+    "CLAIM": {
+      "description": "A cause of action or legal demand asserted by a party against another.",
+      "category": "CASE_MATTER",
+      "parent_type": null,
+      "properties": [
+        "claim_type",
+        "remedy_sought",
+        "count_number",
+        "status"
+      ]
+    },
+    "DOCUMENT": {
+      "description": "A general textual or record item relevant to the legal proceedings.",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": null,
+      "properties": [
+        "title",
+        "document_type",
+        "bates_number",
+        "date_created"
+      ]
+    },
+    "CONTRACT": {
+      "description": "A legally binding agreement or instrument between two or more parties.",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": "DOCUMENT",
+      "properties": [
+        "contract_title",
+        "effective_date",
+        "termination_date",
+        "governing_law"
+      ]
+    },
+    "EVIDENCE": {
+      "description": "Any item, record, or physical item offered to prove or disprove a fact.",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": null,
+      "properties": [
+        "evidence_id",
+        "description",
+        "admissibility_status"
+      ]
+    },
+    "EXHIBIT": {
+      "description": "A document or item formally marked and produced as evidence in court.",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": "EVIDENCE",
+      "properties": [
+        "exhibit_label",
+        "offering_party",
+        "admission_date"
+      ]
+    },
+    "FILING": {
+      "description": "A formal written document submitted to the court (e.g., Motion, Brief, Complaint, Answer).",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": "DOCUMENT",
+      "properties": [
+        "filing_type",
+        "docket_entry_number",
+        "filing_date",
+        "submitting_party"
+      ]
+    },
+    "TESTIMONY": {
+      "description": "Oral or written statement given under oath during deposition, hearing, or trial.",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "parent_type": "EVIDENCE",
+      "properties": [
+        "deponent_name",
+        "testimony_date",
+        "transcript_volume"
+      ]
+    },
+    "EVENT": {
+      "description": "A factual occurrence, incident, transaction, or legal occurrence relevant to the narrative.",
+      "category": "TEMPORAL_EVENT",
+      "parent_type": null,
+      "properties": [
+        "event_name",
+        "description",
+        "location"
+      ]
+    },
+    "DATE": {
+      "description": "A specific calendar date or time instance referenced in the record.",
+      "category": "TEMPORAL_EVENT",
+      "parent_type": null,
+      "properties": [
+        "date_value",
+        "iso_format",
+        "granularity"
+      ]
+    },
+    "DEADLINE": {
+      "description": "A fixed procedural or statutory date/time by which an action must be completed.",
+      "category": "TEMPORAL_EVENT",
+      "parent_type": null,
+      "properties": [
+        "deadline_name",
+        "due_date",
+        "governing_rule",
+        "status"
+      ]
+    },
+    "HEARING": {
+      "description": "A formal judicial proceeding before a court or tribunal (e.g., Oral Argument, Trial, Motion Hearing).",
+      "category": "TEMPORAL_EVENT",
+      "parent_type": "EVENT",
+      "properties": [
+        "hearing_type",
+        "presiding_judge",
+        "courtroom"
+      ]
+    }
+  },
+  "relationship_types": {
+    "PLAINTIFF_IN": {
+      "description": "Indicates that an entity is a plaintiff initiating legal action in a case.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAWYER",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "DEFENDANT_IN": {
+      "description": "Indicates that an entity is a defendant accused or sued in a case.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAWYER",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "REPRESENTED_BY": {
+      "description": "Indicates legal representation by an attorney or law firm.",
+      "is_directed": true,
+      "inverse": "REPRESENTS",
+      "allowed_sources": [
+        "CASE",
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "LAWYER",
+        "LAW_FIRM"
+      ]
+    },
+    "DECIDED_BY": {
+      "description": "Indicates judicial decision or resolution of a case, issue, or claim by a judge or court.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "FILING",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "COURT",
+        "JUDGE"
+      ]
+    },
+    "FILED_IN": {
+      "description": "Indicates submission of a filing or document to a specific court or case file.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "FILING"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COURT"
+      ]
+    },
+    "CITES": {
+      "description": "Indicates legal reference or citation of an authority, statute, case, or document.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "FILING",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "APPLIES": {
+      "description": "Indicates judicial application of a statute, regulation, or legal doctrine.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "DOCUMENT",
+        "FILING",
+        "JUDGE"
+      ],
+      "allowed_targets": [
+        "LEGAL_CONCEPT",
+        "LEGAL_ISSUE",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "INTERPRETS": {
+      "description": "Indicates legal interpretation or construction of a statute, contract clause, or doctrine.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "DOCUMENT",
+        "FILING",
+        "JUDGE"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "OVERRULES": {
+      "description": "Indicates higher court precedent setting aside or invalidating prior case authority.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "FOLLOWS": {
+      "description": "Indicates judicial adherence to binding or persuasive precedent.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "DISTINGUISHES": {
+      "description": "Indicates distinguishing facts or legal context of current matter from precedent.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "FILING"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "SUPPORTED_BY": {
+      "description": "Indicates that a claim, issue, or testimony is supported by evidence, testimony, or statutory authority.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "FILING",
+        "LEGAL_ISSUE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY"
+      ]
+    },
+    "CONTRADICTED_BY": {
+      "description": "Indicates that a claim, assertion, or testimony is contradicted by opposing evidence or testimony.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CLAIM",
+        "EVIDENCE",
+        "FILING",
+        "LEGAL_ISSUE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "TESTIMONY"
+      ]
+    },
+    "EVIDENCED_BY": {
+      "description": "Indicates factual proof of an event or claim via specific exhibit or documentary evidence.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "EVENT",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "TESTIMONY"
+      ]
+    },
+    "MENTIONED_IN": {
+      "description": "Indicates explicit textual mention of an entity inside a document, filing, or testimony.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "COMPANY",
+        "CONTRACT",
+        "COURT",
+        "DATE",
+        "DEADLINE",
+        "DOCUMENT",
+        "EVENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "FILING",
+        "GOVERNMENT_AGENCY",
+        "HEARING",
+        "JUDGE",
+        "LAWYER",
+        "LAW_FIRM",
+        "LEGAL_CONCEPT",
+        "LEGAL_ISSUE",
+        "ORGANIZATION",
+        "PERSON",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY"
+      ]
+    },
+    "WORKS_FOR": {
+      "description": "Indicates employment or organizational affiliation.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "LAWYER",
+        "PERSON",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "COURT",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION"
+      ]
+    },
+    "EMPLOYED_BY": {
+      "description": "Indicates formal employment relationship connecting individual to entity.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "LAWYER",
+        "PERSON",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "COURT",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION"
+      ]
+    },
+    "OWNS": {
+      "description": "Indicates legal ownership, title, or controlling interest.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "ORGANIZATION"
+      ]
+    },
+    "REPRESENTS": {
+      "description": "Indicates attorney or law firm representation of a party or matter.",
+      "is_directed": true,
+      "inverse": "REPRESENTED_BY",
+      "allowed_sources": [
+        "LAWYER",
+        "LAW_FIRM"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "ORGANIZATION",
+        "PERSON"
+      ]
+    },
+    "OCCURRED_ON": {
+      "description": "Associates an event, hearing, or filing with a specific calendar date entity.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE"
+      ]
+    },
+    "OCCURRED_IN": {
+      "description": "Associates an event, hearing, or document with a case or court proceeding context.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "DOCUMENT",
+        "EVENT",
+        "HEARING",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COURT"
+      ]
+    },
+    "BEFORE": {
+      "description": "Temporal ordering indicating source event/date occurred prior to target event/date.",
+      "is_directed": true,
+      "inverse": "AFTER",
+      "allowed_sources": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ]
+    },
+    "AFTER": {
+      "description": "Temporal ordering indicating source event/date occurred after target event/date.",
+      "is_directed": true,
+      "inverse": "BEFORE",
+      "allowed_sources": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ]
+    },
+    "HAS_DEADLINE": {
+      "description": "Associates a procedural filing, case, or task with a specific deadline entity or date.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "EVENT",
+        "FILING",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE"
+      ]
+    }
+  },
+  "total_entity_types": 25,
+  "total_relationship_types": 24,
+  "total_allowed_triplet_rules": 502
+}

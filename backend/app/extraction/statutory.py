@@ -12,22 +12,21 @@ from app.schema.provenance import ExtractionMethod
 from app.extraction.base import BaseExtractor
 from app.extraction.models import ExtractedCandidateEntity
 
-
 # Federal U.S. Code & C.F.R. pattern
 USC_CFR_PATTERN = re.compile(
-    r'\b(?P<title>\d+)\s+'
-    r'(?P<code>U\.?\s*S\.?\s*C\.?|C\.?\s*F\.?\s*R\.?)\s*'
-    r'(?:App\.?\s*)?'
-    r'(?:(?:§+|Sec(?:tion|\.)?)\s*)?'
-    r'(?P<section>\d+[a-zA-Z0-9\-\.\(\)]*)',
-    re.IGNORECASE
+    r"\b(?P<title>\d+)\s+"
+    r"(?P<code>U\.?\s*S\.?\s*C\.?|C\.?\s*F\.?\s*R\.?)\s*"
+    r"(?:App\.?\s*)?"
+    r"(?:(?:§+|Sec(?:tion|\.)?)\s*)?"
+    r"(?P<section>\d+[a-zA-Z0-9\-\.\(\)]*)",
+    re.IGNORECASE,
 )
 
 # State Code / Statute pattern
 STATE_STATUTE_PATTERN = re.compile(
-    r'\b(?P<code>[A-Z][a-zA-Z\.\s]{1,25}(?:Stat|Code|Law|Act|Regs)\.?)\s*'
-    r'(?:§+|Sec(?:tion|\.)?)\s*'
-    r'(?P<section>\d+[a-zA-Z0-9\-\.\(\)]*)'
+    r"\b(?P<code>[A-Z][a-zA-Z\.\s]{1,25}(?:Stat|Code|Law|Act|Regs)\.?)\s*"
+    r"(?:§+|Sec(?:tion|\.)?)\s*"
+    r"(?P<section>\d+[a-zA-Z0-9\-\.\(\)]*)"
 )
 
 
@@ -62,7 +61,9 @@ class StatutoryCitationExtractor(BaseExtractor):
                 raw_match = match.group(0)
 
                 title = match.group("title").strip()
-                code_raw = match.group("code").upper().replace(" ", "").replace(".", ". ")
+                code_raw = (
+                    match.group("code").upper().replace(" ", "").replace(".", ". ")
+                )
                 if "CFR" in code_raw.replace(" ", "").replace(".", ""):
                     code_norm = "C.F.R."
                     entity_type = EntityType.REGULATION
@@ -75,7 +76,9 @@ class StatutoryCitationExtractor(BaseExtractor):
                     continue
 
                 # Adjust end index if trailing punctuation was stripped
-                if raw_match.endswith((".", ",", ";", ":")) and not section.endswith(raw_match[-1]):
+                if raw_match.endswith((".", ",", ";", ":")) and not section.endswith(
+                    raw_match[-1]
+                ):
                     raw_match = raw_match.rstrip(".,;:")
                     end = start + len(raw_match)
 
@@ -90,7 +93,7 @@ class StatutoryCitationExtractor(BaseExtractor):
                     "title_number": title,
                     "code": code_norm,
                     "section": section,
-                    "jurisdiction": "US_FEDERAL"
+                    "jurisdiction": "US_FEDERAL",
                 }
 
                 candidates.append(
@@ -107,7 +110,7 @@ class StatutoryCitationExtractor(BaseExtractor):
                         category=self.category,
                         original_value=raw_match,
                         normalized_value=normalized_val,
-                        metadata=metadata
+                        metadata=metadata,
                     )
                 )
 
@@ -115,7 +118,11 @@ class StatutoryCitationExtractor(BaseExtractor):
             for match in STATE_STATUTE_PATTERN.finditer(text):
                 start, end = match.span()
 
-                if any(c.char_span and not (end <= c.char_span[0] or start >= c.char_span[1]) for c in candidates):
+                if any(
+                    c.char_span
+                    and not (end <= c.char_span[0] or start >= c.char_span[1])
+                    for c in candidates
+                ):
                     continue
 
                 raw_match = match.group(0)
@@ -124,7 +131,9 @@ class StatutoryCitationExtractor(BaseExtractor):
                 if not section:
                     continue
 
-                if raw_match.endswith((".", ",", ";", ":")) and not section.endswith(raw_match[-1]):
+                if raw_match.endswith((".", ",", ";", ":")) and not section.endswith(
+                    raw_match[-1]
+                ):
                     raw_match = raw_match.rstrip(".,;:")
                     end = start + len(raw_match)
 
@@ -151,8 +160,8 @@ class StatutoryCitationExtractor(BaseExtractor):
                         metadata={
                             "code": code_raw,
                             "section": section,
-                            "jurisdiction": "US_STATE"
-                        }
+                            "jurisdiction": "US_STATE",
+                        },
                     )
                 )
 

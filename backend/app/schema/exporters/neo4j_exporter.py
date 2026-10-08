@@ -16,14 +16,22 @@ def export_neo4j_schema(registry: Optional[SchemaRegistry] = None) -> str:
     reg = registry or SchemaRegistry()
     cypher_lines: List[str] = []
 
-    cypher_lines.append("// =============================================================================")
+    cypher_lines.append(
+        "// ============================================================================="
+    )
     cypher_lines.append("// US LEGAL CASE KNOWLEDGE GRAPH - NEO4J SCHEMA DEFINITION")
     cypher_lines.append("// Auto-generated from authoritative Schema Registry")
-    cypher_lines.append("// =============================================================================\n")
+    cypher_lines.append(
+        "// =============================================================================\n"
+    )
 
-    cypher_lines.append("// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "// -----------------------------------------------------------------------------"
+    )
     cypher_lines.append("// 1. NODE UNIQUENESS & IDENTIFIER CONSTRAINTS")
-    cypher_lines.append("// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "// -----------------------------------------------------------------------------"
+    )
 
     for entity_name in reg.list_entity_types():
         cypher_lines.append(
@@ -31,9 +39,13 @@ def export_neo4j_schema(registry: Optional[SchemaRegistry] = None) -> str:
             f"FOR (n:`{entity_name}`) REQUIRE n.id IS UNIQUE;"
         )
 
-    cypher_lines.append("\n// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "\n// -----------------------------------------------------------------------------"
+    )
     cypher_lines.append("// 2. PROPERTY INDEXES FOR PERFORMANCE")
-    cypher_lines.append("// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "// -----------------------------------------------------------------------------"
+    )
 
     for entity_name in reg.list_entity_types():
         cypher_lines.append(
@@ -45,9 +57,13 @@ def export_neo4j_schema(registry: Optional[SchemaRegistry] = None) -> str:
             f"FOR (n:`{entity_name}`) ON (n.name);"
         )
 
-    cypher_lines.append("\n// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "\n// -----------------------------------------------------------------------------"
+    )
     cypher_lines.append("// 3. PROVENANCE PROPERTY EXISTENCE CONSTRAINTS")
-    cypher_lines.append("// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "// -----------------------------------------------------------------------------"
+    )
 
     for entity_name in reg.list_entity_types():
         cypher_lines.append(
@@ -55,9 +71,13 @@ def export_neo4j_schema(registry: Optional[SchemaRegistry] = None) -> str:
             f"FOR (n:`{entity_name}`) REQUIRE n.case_id IS NOT NULL;"
         )
 
-    cypher_lines.append("\n// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "\n// -----------------------------------------------------------------------------"
+    )
     cypher_lines.append("// 4. AUTHORITATIVE RELATIONSHIP TRIPLET MATRICES")
-    cypher_lines.append("// -----------------------------------------------------------------------------")
+    cypher_lines.append(
+        "// -----------------------------------------------------------------------------"
+    )
 
     for rel_name in reg.list_relationship_types():
         rel_enum = RelationshipType(rel_name)

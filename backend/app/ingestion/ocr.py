@@ -30,7 +30,9 @@ class NativeTextDetector:
     """
 
     @staticmethod
-    def analyze_pdf_native_text(pdf_path_or_bytes: Union[str, Path, bytes], min_char_count_per_page: int = 30) -> Tuple[bool, int]:
+    def analyze_pdf_native_text(
+        pdf_path_or_bytes: Union[str, Path, bytes], min_char_count_per_page: int = 30
+    ) -> Tuple[bool, int]:
         """
         Scans PDF pages to inspect native text density.
         Returns (has_usable_native_text: bool, page_count: int).
@@ -40,6 +42,7 @@ class NativeTextDetector:
                 reader = pypdf.PdfReader(str(pdf_path_or_bytes))
             else:
                 import io
+
                 reader = pypdf.PdfReader(io.BytesIO(pdf_path_or_bytes))
 
             page_count = len(reader.pages)
@@ -65,7 +68,7 @@ class NativeTextDetector:
         self,
         file_type: FileType,
         file_source: Union[str, Path, bytes],
-        force_ocr: bool = False
+        force_ocr: bool = False,
     ) -> Tuple[bool, bool]:
         """
         Determines (should_run_ocr, has_native_text).
@@ -80,7 +83,12 @@ class NativeTextDetector:
         if file_type == FileType.DOCX:
             return False, True
 
-        if file_type in (FileType.IMAGE_PNG, FileType.IMAGE_JPEG, FileType.IMAGE_TIFF, FileType.IMAGE_BMP):
+        if file_type in (
+            FileType.IMAGE_PNG,
+            FileType.IMAGE_JPEG,
+            FileType.IMAGE_TIFF,
+            FileType.IMAGE_BMP,
+        ):
             return True, False
 
         if file_type == FileType.PDF:
@@ -98,7 +106,7 @@ class OCREngineManager:
     def get_pipeline_options(
         use_ocr: bool = True,
         ocr_engine: OCREngineType = OCREngineType.RAPIDOCR,
-        do_table_structure: bool = True
+        do_table_structure: bool = True,
     ) -> PdfPipelineOptions:
         """
         Configures and returns PdfPipelineOptions for Docling converter.

@@ -5,8 +5,13 @@ Tests all 8 candidate extraction categories + false-positive edge cases.
 
 import pytest
 from app.ingestion.models import (
-    LegalDocument, LegalPage, LegalTextBlock, FileType,
-    DocumentMetadata, ProcessingMetadata, TextBlockType
+    LegalDocument,
+    LegalPage,
+    LegalTextBlock,
+    FileType,
+    DocumentMetadata,
+    ProcessingMetadata,
+    TextBlockType,
 )
 from app.schema.entity_types import EntityType
 from app.extraction.case_citation import CaseCitationExtractor
@@ -32,15 +37,15 @@ def create_test_doc(text: str, title: str = "Test Legal Document") -> LegalDocum
                 block_type=TextBlockType.PARAGRAPH,
                 raw_text=text,
                 normalized_text=text,
-                page_number=1
+                page_number=1,
             )
-        ]
+        ],
     )
     proc_meta = ProcessingMetadata(
         document_id="doc_test_100",
         filename="test_doc.pdf",
         file_type=FileType.PDF,
-        page_count=1
+        page_count=1,
     )
     return LegalDocument(
         document_id="doc_test_100",
@@ -51,7 +56,7 @@ def create_test_doc(text: str, title: str = "Test Legal Document") -> LegalDocum
         file_size_bytes=1024,
         document_metadata=DocumentMetadata(title=title),
         processing_metadata=proc_meta,
-        pages=[page]
+        pages=[page],
     )
 
 
@@ -107,7 +112,9 @@ class TestDeterministicExtraction:
         results = extractor.extract(doc)
 
         dockets = [r.normalized_value for r in results]
-        assert "3:24-CV-00123-JMB" in dockets or "3:24-CV-00123" in [d[:14] for d in dockets]
+        assert "3:24-CV-00123-JMB" in dockets or "3:24-CV-00123" in [
+            d[:14] for d in dockets
+        ]
         assert "1:20-CV-09876" in dockets
         assert "24-CV-1234" in dockets
 
@@ -156,8 +163,14 @@ class TestDeterministicExtraction:
         results = extractor.extract(doc)
 
         courts = [r.normalized_value for r in results]
-        assert "United States District Court for the Southern District of New York" in courts
-        assert "United States District Court for the Northern District of California" in courts
+        assert (
+            "United States District Court for the Southern District of New York"
+            in courts
+        )
+        assert (
+            "United States District Court for the Northern District of California"
+            in courts
+        )
         assert "United States Court of Appeals for the Ninth Circuit" in courts
 
     def test_9_false_positives(self):

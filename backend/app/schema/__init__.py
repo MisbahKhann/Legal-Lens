@@ -11,7 +11,11 @@ from app.schema.provenance import Provenance, ExtractionMethod
 from app.schema.temporal import TemporalProperties, EventStatus
 from app.schema.constraints import RELATIONSHIP_CONSTRAINTS
 from app.schema.models import LegalNode, LegalRelationship, Triplet
-from app.schema.validator import SchemaValidator, SchemaValidationError, TripletConstraintViolationError
+from app.schema.validator import (
+    SchemaValidator,
+    SchemaValidationError,
+    TripletConstraintViolationError,
+)
 from app.schema.registry import SchemaRegistry
 
 __all__ = [

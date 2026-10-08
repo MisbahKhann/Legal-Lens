@@ -2,7 +2,10 @@
 Step 3: Deterministic Legal Information Extraction Package.
 """
 
-from app.extraction.models import ExtractedCandidateEntity, DeterministicExtractionResult
+from app.extraction.models import (
+    ExtractedCandidateEntity,
+    DeterministicExtractionResult,
+)
 from app.extraction.base import BaseExtractor
 from app.extraction.case_citation import CaseCitationExtractor
 from app.extraction.statutory import StatutoryCitationExtractor
@@ -19,7 +22,7 @@ from app.extraction.ai_models import (
     CandidateEntity,
     CandidateRelation,
     AIExtractionResult,
-    CombinedExtractionResult
+    CombinedExtractionResult,
 )
 from app.extraction.chunker import DocumentChunker, DocumentChunk
 from app.extraction.gliner_relex import GLiNERRelexExtractor
@@ -51,4 +54,3 @@ __all__ = [
     "EvaluationReport",
     "EvaluationMetric",
 ]
-

@@ -5,8 +5,13 @@ Runs the extraction pipeline against sample gold-annotated legal documents and o
 
 from typing import List, Tuple
 from app.ingestion.models import (
-    LegalDocument, LegalPage, LegalTextBlock, FileType,
-    DocumentMetadata, ProcessingMetadata, TextBlockType
+    LegalDocument,
+    LegalPage,
+    LegalTextBlock,
+    FileType,
+    DocumentMetadata,
+    ProcessingMetadata,
+    TextBlockType,
 )
 from app.extraction.pipeline import DeterministicExtractionPipeline
 from app.extraction.evaluator import GoldAnnotation, ExtractionEvaluator
@@ -44,7 +49,7 @@ def build_evaluation_dataset() -> List[Tuple[LegalDocument, List[GoldAnnotation]
             document_id=doc1_id,
             filename="complaint_001.pdf",
             file_type=FileType.PDF,
-            page_count=1
+            page_count=1,
         ),
         pages=[
             LegalPage(
@@ -56,25 +61,91 @@ def build_evaluation_dataset() -> List[Tuple[LegalDocument, List[GoldAnnotation]
                         block_id="b1",
                         block_type=TextBlockType.HEADING,
                         raw_text="FIRST AMENDED COMPLAINT FOR DAMAGES",
-                        page_number=1
+                        page_number=1,
                     )
-                ]
+                ],
             )
-        ]
+        ],
     )
 
     golds1 = [
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="court_name", original_value="SOUTHERN DISTRICT OF NEW YORK", normalized_value="United States District Court for the Southern District of New York"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="docket_number", original_value="1:24-cv-01234", normalized_value="1:24-CV-01234"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="filing_type", original_value="Amended Complaint", normalized_value="Amended Complaint"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="statutory_citation", original_value="42 U.S.C. § 1983", normalized_value="42 U.S.C. § 1983"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="statutory_citation", original_value="18 U.S.C. § 1001", normalized_value="18 U.S.C. § 1001"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="date", original_value="January 15, 2024", normalized_value="2024-01-15"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="date", original_value="02/20/2024", normalized_value="2024-02-20"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="case_citation", original_value="347 U.S. 483", normalized_value="347 U.S. 483"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="exhibit", original_value="Exhibit A", normalized_value="Exhibit A"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="section_reference", original_value="Section 12", normalized_value="Section 12"),
-        GoldAnnotation(document_id=doc1_id, page_number=1, category="section_reference", original_value="Article III", normalized_value="Article III"),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="court_name",
+            original_value="SOUTHERN DISTRICT OF NEW YORK",
+            normalized_value="United States District Court for the Southern District of New York",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="docket_number",
+            original_value="1:24-cv-01234",
+            normalized_value="1:24-CV-01234",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="filing_type",
+            original_value="Amended Complaint",
+            normalized_value="Amended Complaint",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="statutory_citation",
+            original_value="42 U.S.C. § 1983",
+            normalized_value="42 U.S.C. § 1983",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="statutory_citation",
+            original_value="18 U.S.C. § 1001",
+            normalized_value="18 U.S.C. § 1001",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="date",
+            original_value="January 15, 2024",
+            normalized_value="2024-01-15",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="date",
+            original_value="02/20/2024",
+            normalized_value="2024-02-20",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="case_citation",
+            original_value="347 U.S. 483",
+            normalized_value="347 U.S. 483",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="exhibit",
+            original_value="Exhibit A",
+            normalized_value="Exhibit A",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="section_reference",
+            original_value="Section 12",
+            normalized_value="Section 12",
+        ),
+        GoldAnnotation(
+            document_id=doc1_id,
+            page_number=1,
+            category="section_reference",
+            original_value="Article III",
+            normalized_value="Article III",
+        ),
     ]
 
     # Document 2: Motion for Summary Judgment
@@ -96,12 +167,14 @@ def build_evaluation_dataset() -> List[Tuple[LegalDocument, List[GoldAnnotation]
         file_type=FileType.PDF,
         sha256_hash="hash200",
         file_size_bytes=1500,
-        document_metadata=DocumentMetadata(title="DEFENDANT'S MOTION FOR SUMMARY JUDGMENT"),
+        document_metadata=DocumentMetadata(
+            title="DEFENDANT'S MOTION FOR SUMMARY JUDGMENT"
+        ),
         processing_metadata=ProcessingMetadata(
             document_id=doc2_id,
             filename="motion_002.pdf",
             file_type=FileType.PDF,
-            page_count=1
+            page_count=1,
         ),
         pages=[
             LegalPage(
@@ -113,23 +186,77 @@ def build_evaluation_dataset() -> List[Tuple[LegalDocument, List[GoldAnnotation]
                         block_id="b1",
                         block_type=TextBlockType.HEADING,
                         raw_text="DEFENDANT'S MOTION FOR SUMMARY JUDGMENT",
-                        page_number=1
+                        page_number=1,
                     )
-                ]
+                ],
             )
-        ]
+        ],
     )
 
     golds2 = [
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="court_name", original_value="NINTH CIRCUIT", normalized_value="United States Court of Appeals for the Ninth Circuit"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="court_name", original_value="N.D. Cal.", normalized_value="United States District Court for the Northern District of California"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="docket_number", original_value="22-55123", normalized_value="22-55123"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="filing_type", original_value="Motion for Summary Judgment", normalized_value="Motion for Summary Judgment"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="date", original_value="10th day of March, 2023", normalized_value="2023-03-10"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="statutory_citation", original_value="28 U.S.C. § 1331", normalized_value="28 U.S.C. § 1331"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="section_reference", original_value="§ 1983", normalized_value="Section 1983"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="exhibit", original_value="Ex. B", normalized_value="Exhibit B"),
-        GoldAnnotation(document_id=doc2_id, page_number=1, category="exhibit", original_value="Pl. Ex. 3", normalized_value="Exhibit 3 (Plaintiff)"),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="court_name",
+            original_value="NINTH CIRCUIT",
+            normalized_value="United States Court of Appeals for the Ninth Circuit",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="court_name",
+            original_value="N.D. Cal.",
+            normalized_value="United States District Court for the Northern District of California",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="docket_number",
+            original_value="22-55123",
+            normalized_value="22-55123",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="filing_type",
+            original_value="Motion for Summary Judgment",
+            normalized_value="Motion for Summary Judgment",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="date",
+            original_value="10th day of March, 2023",
+            normalized_value="2023-03-10",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="statutory_citation",
+            original_value="28 U.S.C. § 1331",
+            normalized_value="28 U.S.C. § 1331",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="section_reference",
+            original_value="§ 1983",
+            normalized_value="Section 1983",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="exhibit",
+            original_value="Ex. B",
+            normalized_value="Exhibit B",
+        ),
+        GoldAnnotation(
+            document_id=doc2_id,
+            page_number=1,
+            category="exhibit",
+            original_value="Pl. Ex. 3",
+            normalized_value="Exhibit 3 (Plaintiff)",
+        ),
     ]
 
     return [(doc1, golds1), (doc2, golds2)]

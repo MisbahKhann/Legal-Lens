@@ -6,11 +6,16 @@ Allows extracted candidate entities and relations to be compared against expecte
 from typing import List, Dict, Any, Set, Tuple, Optional
 from pydantic import BaseModel, Field
 
-from app.extraction.ai_models import AIExtractionResult, CandidateEntity, CandidateRelation
+from app.extraction.ai_models import (
+    AIExtractionResult,
+    CandidateEntity,
+    CandidateRelation,
+)
 
 
 class EvaluationMetric(BaseModel):
     """Container for Precision, Recall, and F1 evaluation metrics."""
+
     true_positives: int = 0
     false_positives: int = 0
     false_negatives: int = 0
@@ -27,13 +32,16 @@ class EvaluationMetric(BaseModel):
         self.precision = round(tp / (tp + fp), 4) if (tp + fp) > 0 else 0.0
         self.recall = round(tp / (tp + fn), 4) if (tp + fn) > 0 else 0.0
         if (self.precision + self.recall) > 0:
-            self.f1_score = round(2 * (self.precision * self.recall) / (self.precision + self.recall), 4)
+            self.f1_score = round(
+                2 * (self.precision * self.recall) / (self.precision + self.recall), 4
+            )
         else:
             self.f1_score = 0.0
 
 
 class EvaluationReport(BaseModel):
     """Complete evaluation report comparing predicted extractions against ground truth."""
+
     document_id: str
     entity_metrics: EvaluationMetric = Field(default_factory=EvaluationMetric)
     relation_metrics: EvaluationMetric = Field(default_factory=EvaluationMetric)
@@ -53,7 +61,7 @@ class AIEvaluator:
         cls,
         prediction: AIExtractionResult,
         expected_entities: List[Dict[str, Any]],
-        expected_relations: List[Dict[str, Any]]
+        expected_relations: List[Dict[str, Any]],
     ) -> EvaluationReport:
         """
         Compares predicted AIExtractionResult against ground truth entities and relations.
@@ -74,21 +82,27 @@ class AIEvaluator:
         fp_ent = 0
 
         for pred_ent in prediction.entities:
-            matched_idx = cls._match_entity(pred_ent, expected_entities, matched_expected_ent_indices)
+            matched_idx = cls._match_entity(
+                pred_ent, expected_entities, matched_expected_ent_indices
+            )
             if matched_idx is not None:
                 tp_ent += 1
                 matched_expected_ent_indices.add(matched_idx)
-                report.detailed_entity_matches.append({
-                    "status": "TRUE_POSITIVE",
-                    "predicted": pred_ent.model_dump(mode="json"),
-                    "expected": expected_entities[matched_idx]
-                })
+                report.detailed_entity_matches.append(
+                    {
+                        "status": "TRUE_POSITIVE",
+                        "predicted": pred_ent.model_dump(mode="json"),
+                        "expected": expected_entities[matched_idx],
+                    }
+                )
             else:
                 fp_ent += 1
-                report.detailed_entity_matches.append({
-                    "status": "FALSE_POSITIVE",
-                    "predicted": pred_ent.model_dump(mode="json")
-                })
+                report.detailed_entity_matches.append(
+                    {
+                        "status": "FALSE_POSITIVE",
+                        "predicted": pred_ent.model_dump(mode="json"),
+                    }
+                )
 
         fn_ent = len(expected_entities) - len(matched_expected_ent_indices)
         for i, exp_ent in enumerate(expected_entities):
@@ -106,21 +120,27 @@ class AIEvaluator:
         fp_rel = 0
 
         for pred_rel in prediction.relations:
-            matched_idx = cls._match_relation(pred_rel, expected_relations, matched_expected_rel_indices)
+            matched_idx = cls._match_relation(
+                pred_rel, expected_relations, matched_expected_rel_indices
+            )
             if matched_idx is not None:
                 tp_rel += 1
                 matched_expected_rel_indices.add(matched_idx)
-                report.detailed_relation_matches.append({
-                    "status": "TRUE_POSITIVE",
-                    "predicted": pred_rel.model_dump(mode="json"),
-                    "expected": expected_relations[matched_idx]
-                })
+                report.detailed_relation_matches.append(
+                    {
+                        "status": "TRUE_POSITIVE",
+                        "predicted": pred_rel.model_dump(mode="json"),
+                        "expected": expected_relations[matched_idx],
+                    }
+                )
             else:
                 fp_rel += 1
-                report.detailed_relation_matches.append({
-                    "status": "FALSE_POSITIVE",
-                    "predicted": pred_rel.model_dump(mode="json")
-                })
+                report.detailed_relation_matches.append(
+                    {
+                        "status": "FALSE_POSITIVE",
+                        "predicted": pred_rel.model_dump(mode="json"),
+                    }
+                )
 
         fn_rel = len(expected_relations) - len(matched_expected_rel_indices)
         for i, exp_rel in enumerate(expected_relations):
@@ -139,7 +159,7 @@ class AIEvaluator:
         cls,
         pred_ent: CandidateEntity,
         expected_entities: List[Dict[str, Any]],
-        already_matched: Set[int]
+        already_matched: Set[int],
     ) -> Optional[int]:
         """Fuzzy matches candidate entity against ground truth list."""
         for i, exp in enumerate(expected_entities):
@@ -152,7 +172,11 @@ class AIEvaluator:
 
             if pred_ent.entity_type.value == exp_type:
                 pred_text = pred_ent.text.strip().lower()
-                if pred_text == exp_text or exp_text in pred_text or pred_text in exp_text:
+                if (
+                    pred_text == exp_text
+                    or exp_text in pred_text
+                    or pred_text in exp_text
+                ):
                     if exp_page is None or pred_ent.page_number == exp_page:
                         return i
         return None
@@ -162,7 +186,7 @@ class AIEvaluator:
         cls,
         pred_rel: CandidateRelation,
         expected_relations: List[Dict[str, Any]],
-        already_matched: Set[int]
+        already_matched: Set[int],
     ) -> Optional[int]:
         """Fuzzy matches candidate relation against ground truth list."""
         for i, exp in enumerate(expected_relations):
@@ -177,8 +201,12 @@ class AIEvaluator:
                 pred_src = pred_rel.source_entity.text.strip().lower()
                 pred_tgt = pred_rel.target_entity.text.strip().lower()
 
-                src_match = pred_src == exp_src or exp_src in pred_src or pred_src in exp_src
-                tgt_match = pred_tgt == exp_tgt or exp_tgt in pred_tgt or pred_tgt in exp_tgt
+                src_match = (
+                    pred_src == exp_src or exp_src in pred_src or pred_src in exp_src
+                )
+                tgt_match = (
+                    pred_tgt == exp_tgt or exp_tgt in pred_tgt or pred_tgt in exp_tgt
+                )
 
                 if src_match and tgt_match:
                     return i

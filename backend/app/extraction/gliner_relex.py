@@ -12,7 +12,11 @@ import torch
 from app.schema.entity_types import EntityType
 from app.schema.relationship_types import RelationshipType
 from app.schema.validator import SchemaValidator, TripletConstraintViolationError
-from app.extraction.ai_models import CandidateEntity, CandidateRelation, AIExtractionResult
+from app.extraction.ai_models import (
+    CandidateEntity,
+    CandidateRelation,
+    AIExtractionResult,
+)
 from app.extraction.chunker import DocumentChunk
 from app.schema.provenance import ExtractionMethod
 
@@ -33,13 +37,13 @@ class GLiNERRelexExtractor:
 
     def __init__(
         self,
-        model_name: str = "knowledgator/gliner-multitask-large-v0.5",
+        model_name: str = "knowledgator/gliner-relex-large-v1.0",
         entity_confidence_threshold: float = 0.40,
         relation_confidence_threshold: float = 0.40,
         device: Optional[str] = None,
         entity_labels: Optional[List[str]] = None,
         relation_labels: Optional[List[str]] = None,
-        enable_caching: bool = True
+        enable_caching: bool = True,
     ):
         """
         Args:
@@ -73,7 +77,10 @@ class GLiNERRelexExtractor:
 
         try:
             from gliner import GLiNER
-            logger.info(f"Loading GLiNER-Relex model '{self.model_name}' on device '{self.device}'...")
+
+            logger.info(
+                f"Loading GLiNER-Relex model '{self.model_name}' on device '{self.device}'..."
+            )
             self._model = GLiNER.from_pretrained(self.model_name)
             if hasattr(self._model, "to"):
                 self._model.to(self.device)
@@ -83,7 +90,9 @@ class GLiNERRelexExtractor:
             logger.error(f"Failed to load GLiNER-Relex model '{self.model_name}': {e}")
             raise RuntimeError(f"GLiNER-Relex model loading failure: {e}") from e
 
-    def extract_from_chunk(self, chunk: DocumentChunk) -> Tuple[List[CandidateEntity], List[CandidateRelation]]:
+    def extract_from_chunk(
+        self, chunk: DocumentChunk
+    ) -> Tuple[List[CandidateEntity], List[CandidateRelation]]:
         """
         Extracts candidate entities and candidate relationships from a single DocumentChunk.
 
@@ -99,45 +108,54 @@ class GLiNERRelexExtractor:
         # Check inference cache if enabled
         chunk_hash = hashlib.sha256(chunk.text.encode("utf-8")).hexdigest()
         if self.enable_caching and chunk_hash in self._cache:
-            logger.debug(f"Cache hit for chunk {chunk.chunk_id} (hash={chunk_hash[:8]})")
+            logger.debug(
+                f"Cache hit for chunk {chunk.chunk_id} (hash={chunk_hash[:8]})"
+            )
             raw_entities, raw_relations = self._cache[chunk_hash]
         else:
             model = self._load_model()
             try:
-                if hasattr(model, "predict_entities_and_relations"):
-                    prediction = model.predict_entities_and_relations(
+                if hasattr(model, "predict_relations"):
+                    prediction = model.predict_relations(
                         chunk.text,
-                        self.entity_labels,
-                        rel_labels=self.relation_labels,
-                        threshold=min(self.entity_confidence_threshold, self.relation_confidence_threshold)
+                        labels=self.entity_labels,
+                        relations=self.relation_labels,
+                        threshold=min(
+                            self.entity_confidence_threshold,
+                            self.relation_confidence_threshold,
+                        ),
                     )
-                    raw_entities = prediction.get("entities", [])
-                    raw_relations = prediction.get("relations", [])
+                    raw_entities = prediction[0]
+                    raw_relations = prediction[1]
                 elif hasattr(model, "predict_entities"):
                     raw_entities = model.predict_entities(
                         chunk.text,
                         self.entity_labels,
-                        threshold=self.entity_confidence_threshold
+                        threshold=self.entity_confidence_threshold,
                     )
                     raw_relations = []
                 else:
                     raw_entities, raw_relations = [], []
             except Exception as e:
-                logger.warning(f"Error during GLiNER inference on chunk {chunk.chunk_id}: {e}")
+                logger.warning(
+                    f"Error during GLiNER inference on chunk {chunk.chunk_id}: {e}"
+                )
                 raw_entities, raw_relations = [], []
 
             if self.enable_caching:
                 self._cache[chunk_hash] = (raw_entities, raw_relations)
 
-        candidate_entities, entity_key_map = self._process_raw_entities(chunk, raw_entities)
-        candidate_relations = self._process_raw_relations(chunk, raw_relations, entity_key_map)
+        candidate_entities, entity_key_map = self._process_raw_entities(
+            chunk, raw_entities
+        )
+        candidate_relations = self._process_raw_relations(
+            chunk, raw_relations, entity_key_map
+        )
 
         return candidate_entities, candidate_relations
 
     def _process_raw_entities(
-        self,
-        chunk: DocumentChunk,
-        raw_entities: List[Dict[str, Any]]
+        self, chunk: DocumentChunk, raw_entities: List[Dict[str, Any]]
     ) -> Tuple[List[CandidateEntity], Dict[Tuple[int, int, str], CandidateEntity]]:
         """Processes raw entity predictions into CandidateEntity objects."""
         candidate_entities: List[CandidateEntity] = []
@@ -154,7 +172,9 @@ class GLiNERRelexExtractor:
             try:
                 entity_type = SchemaValidator.validate_entity_type(label_str)
             except Exception:
-                logger.warning(f"Skipping prediction with uncontrolled entity label '{label_str}'.")
+                logger.warning(
+                    f"Skipping prediction with uncontrolled entity label '{label_str}'."
+                )
                 continue
 
             text = raw_ent.get("text", "").strip()
@@ -182,7 +202,10 @@ class GLiNERRelexExtractor:
                 end_offset=end_offset,
                 confidence=round(score, 4),
                 extraction_method=ExtractionMethod.GLINER_RELEX,
-                metadata={"raw_label": raw_ent.get("label"), "chunk_offset": (rel_start, rel_end)}
+                metadata={
+                    "raw_label": raw_ent.get("label"),
+                    "chunk_offset": (rel_start, rel_end),
+                },
             )
 
             candidate_entities.append(cand)
@@ -194,7 +217,7 @@ class GLiNERRelexExtractor:
         self,
         chunk: DocumentChunk,
         raw_relations: List[Dict[str, Any]],
-        entity_key_map: Dict[Tuple[int, int, str], CandidateEntity]
+        entity_key_map: Dict[Tuple[int, int, str], CandidateEntity],
     ) -> List[CandidateRelation]:
         """Processes raw relation predictions into CandidateRelation objects with constraint validation."""
         candidate_relations: List[CandidateRelation] = []
@@ -210,14 +233,20 @@ class GLiNERRelexExtractor:
             try:
                 rel_type = SchemaValidator.validate_relationship_type(rel_type_str)
             except Exception:
-                logger.warning(f"Skipping prediction with uncontrolled relation label '{rel_type_str}'.")
+                logger.warning(
+                    f"Skipping prediction with uncontrolled relation label '{rel_type_str}'."
+                )
                 continue
 
             head_dict = raw_rel.get("head", {})
             tail_dict = raw_rel.get("tail", {})
 
-            source_cand = self._get_or_create_candidate_from_dict(chunk, head_dict, entity_key_map)
-            target_cand = self._get_or_create_candidate_from_dict(chunk, tail_dict, entity_key_map)
+            source_cand = self._get_or_create_candidate_from_dict(
+                chunk, head_dict, entity_key_map
+            )
+            target_cand = self._get_or_create_candidate_from_dict(
+                chunk, tail_dict, entity_key_map
+            )
 
             if not source_cand or not target_cand:
                 continue
@@ -230,7 +259,7 @@ class GLiNERRelexExtractor:
                     source_type=source_cand.entity_type,
                     relationship_type=rel_type,
                     target_type=target_cand.entity_type,
-                    allow_subtype_inheritance=True
+                    allow_subtype_inheritance=True,
                 )
             except TripletConstraintViolationError as e:
                 is_valid = False
@@ -249,7 +278,7 @@ class GLiNERRelexExtractor:
                 extraction_method=ExtractionMethod.GLINER_RELEX,
                 is_valid=is_valid,
                 validation_error=validation_error,
-                metadata={"raw_relation": raw_rel.get("relation")}
+                metadata={"raw_relation": raw_rel.get("relation")},
             )
 
             candidate_relations.append(cand_rel)
@@ -260,7 +289,7 @@ class GLiNERRelexExtractor:
         self,
         chunk: DocumentChunk,
         ent_dict: Dict[str, Any],
-        entity_key_map: Dict[Tuple[int, int, str], CandidateEntity]
+        entity_key_map: Dict[Tuple[int, int, str], CandidateEntity],
     ) -> Optional[CandidateEntity]:
         """Looks up existing CandidateEntity or constructs one from prediction head/tail dict."""
         if not ent_dict:
@@ -303,5 +332,5 @@ class GLiNERRelexExtractor:
             start_offset=chunk.start_char_offset + rel_start,
             end_offset=chunk.start_char_offset + rel_end,
             confidence=round(score, 4),
-            extraction_method=ExtractionMethod.GLINER_RELEX
+            extraction_method=ExtractionMethod.GLINER_RELEX,
         )

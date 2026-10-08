@@ -7,13 +7,17 @@ and computes Precision, Recall, and F1 Score metrics per category and overall.
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
-from app.extraction.models import ExtractedCandidateEntity, DeterministicExtractionResult
+from app.extraction.models import (
+    ExtractedCandidateEntity,
+    DeterministicExtractionResult,
+)
 
 
 class GoldAnnotation(BaseModel):
     """
     Manually verified gold-standard target entity annotation.
     """
+
     document_id: str
     page_number: int = Field(default=1, ge=1)
     category: str
@@ -23,6 +27,7 @@ class GoldAnnotation(BaseModel):
 
 class CategoryMetrics(BaseModel):
     """Precision, Recall, and F1 metrics for an extraction category."""
+
     category: str
     true_positives: int = 0
     false_positives: int = 0
@@ -36,16 +41,23 @@ class CategoryMetrics(BaseModel):
         fp = self.false_positives
         fn = self.false_negatives
 
-        self.precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0 if tp == 0 and fp == 0 else 0.0
-        self.recall = tp / (tp + fn) if (tp + fn) > 0 else 1.0 if tp == 0 and fn == 0 else 0.0
+        self.precision = (
+            tp / (tp + fp) if (tp + fp) > 0 else 1.0 if tp == 0 and fp == 0 else 0.0
+        )
+        self.recall = (
+            tp / (tp + fn) if (tp + fn) > 0 else 1.0 if tp == 0 and fn == 0 else 0.0
+        )
         if self.precision + self.recall > 0:
-            self.f1_score = 2 * (self.precision * self.recall) / (self.precision + self.recall)
+            self.f1_score = (
+                2 * (self.precision * self.recall) / (self.precision + self.recall)
+            )
         else:
             self.f1_score = 0.0
 
 
 class EvaluationReport(BaseModel):
     """Full evaluation report summarizing metrics across all categories."""
+
     total_extracted: int = 0
     total_gold_annotations: int = 0
     category_metrics: Dict[str, CategoryMetrics] = Field(default_factory=dict)
@@ -110,7 +122,7 @@ class ExtractionEvaluator:
     def evaluate(
         self,
         results: List[DeterministicExtractionResult],
-        gold_annotations: List[GoldAnnotation]
+        gold_annotations: List[GoldAnnotation],
     ) -> EvaluationReport:
         """
         Calculates precision, recall, and F1 scores across all categories.
@@ -119,7 +131,9 @@ class ExtractionEvaluator:
         for res in results:
             all_candidates.extend(res.candidates)
 
-        categories = set(c.category for c in all_candidates) | set(g.category for g in gold_annotations)
+        categories = set(c.category for c in all_candidates) | set(
+            g.category for g in gold_annotations
+        )
         category_metrics: Dict[str, CategoryMetrics] = {
             cat: CategoryMetrics(category=cat) for cat in categories
         }
@@ -163,7 +177,7 @@ class ExtractionEvaluator:
             category="OVERALL",
             true_positives=overall_tp,
             false_positives=overall_fp,
-            false_negatives=overall_fn
+            false_negatives=overall_fn,
         )
         overall_m.compute_scores()
 
@@ -171,5 +185,5 @@ class ExtractionEvaluator:
             total_extracted=len(all_candidates),
             total_gold_annotations=len(gold_annotations),
             category_metrics=category_metrics,
-            overall_metrics=overall_m
+            overall_metrics=overall_m,
         )

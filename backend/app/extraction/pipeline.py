@@ -8,7 +8,10 @@ from collections import Counter
 
 from app.ingestion.models import LegalDocument
 from app.extraction.base import BaseExtractor
-from app.extraction.models import ExtractedCandidateEntity, DeterministicExtractionResult
+from app.extraction.models import (
+    ExtractedCandidateEntity,
+    DeterministicExtractionResult,
+)
 from app.extraction.case_citation import CaseCitationExtractor
 from app.extraction.statutory import StatutoryCitationExtractor
 from app.extraction.date import DateExtractor
@@ -40,7 +43,9 @@ class DeterministicExtractionPipeline:
                 CourtExtractor(),
             ]
 
-    def extract_candidates(self, document: LegalDocument) -> DeterministicExtractionResult:
+    def extract_candidates(
+        self, document: LegalDocument
+    ) -> DeterministicExtractionResult:
         """
         Executes all registered deterministic extractors on the given LegalDocument.
 
@@ -67,5 +72,5 @@ class DeterministicExtractionPipeline:
             document_id=document.document_id,
             case_id=document.case_id,
             candidates=all_candidates,
-            summary_counts=category_counts
+            summary_counts=category_counts,
         )

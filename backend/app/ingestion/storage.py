@@ -53,14 +53,18 @@ class DocumentStorage:
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                documents.append({
-                    "document_id": data.get("document_id"),
-                    "filename": data.get("filename"),
-                    "file_type": data.get("file_type"),
-                    "sha256_hash": data.get("sha256_hash"),
-                    "page_count": len(data.get("pages", [])),
-                    "created_at": data.get("processing_metadata", {}).get("started_at"),
-                })
+                documents.append(
+                    {
+                        "document_id": data.get("document_id"),
+                        "filename": data.get("filename"),
+                        "file_type": data.get("file_type"),
+                        "sha256_hash": data.get("sha256_hash"),
+                        "page_count": len(data.get("pages", [])),
+                        "created_at": data.get("processing_metadata", {}).get(
+                            "started_at"
+                        ),
+                    }
+                )
             except Exception:
                 continue
         return documents

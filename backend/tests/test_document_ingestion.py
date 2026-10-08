@@ -45,8 +45,16 @@ def normal_text_pdf(tmp_path):
     c.drawString(72, 720, "UNITED STATES DISTRICT COURT")
     c.setFont("Helvetica", 11)
     c.drawString(72, 690, "COMPLAINT FOR BREACH OF CONTRACT")
-    c.drawString(72, 660, "Plaintiff Acme Corp hereby files this complaint against Defendant Globex Inc.")
-    c.drawString(72, 640, "Jurisdiction is proper under 28 U.S.C. Section 1332 due to diversity of citizenship.")
+    c.drawString(
+        72,
+        660,
+        "Plaintiff Acme Corp hereby files this complaint against Defendant Globex Inc.",
+    )
+    c.drawString(
+        72,
+        640,
+        "Jurisdiction is proper under 28 U.S.C. Section 1332 due to diversity of citizenship.",
+    )
     c.save()
     return pdf_path
 
@@ -58,7 +66,11 @@ def scanned_pdf(tmp_path):
     img = Image.new("RGB", (1000, 1200), color="white")
     d = ImageDraw.Draw(img)
     d.text((100, 100), "SCANNED EVIDENCE EXHIBIT A", fill="black")
-    d.text((100, 150), "This is a scanned document without native font text streams.", fill="black")
+    d.text(
+        (100, 150),
+        "This is a scanned document without native font text streams.",
+        fill="black",
+    )
     img.save(img_path)
 
     # Embed image onto PDF canvas without native text stream
@@ -74,10 +86,16 @@ def docx_document(tmp_path):
     docx_path = tmp_path / "settlement_agreement.docx"
     doc = docx.Document()
     doc.add_heading("SETTLEMENT AGREEMENT AND RELEASE", level=1)
-    doc.add_paragraph("This Settlement Agreement is entered into by and between Party A and Party B.")
+    doc.add_paragraph(
+        "This Settlement Agreement is entered into by and between Party A and Party B."
+    )
     doc.add_heading("RECITALS", level=2)
-    p = doc.add_paragraph("WHEREAS, the parties desire to settle all outstanding claims amicably;")
-    p.add_run(" NOW THEREFORE, for good and valuable consideration, the parties agree as follows:")
+    p = doc.add_paragraph(
+        "WHEREAS, the parties desire to settle all outstanding claims amicably;"
+    )
+    p.add_run(
+        " NOW THEREFORE, for good and valuable consideration, the parties agree as follows:"
+    )
     doc.add_paragraph("1. Payment of Settlement Amount.", style="List Bullet")
     doc.add_paragraph("2. Mutual Release of Claims.", style="List Bullet")
     doc.save(docx_path)
@@ -90,7 +108,11 @@ def scanned_image_png(tmp_path):
     img = Image.new("RGB", (1200, 1400), color="white")
     d = ImageDraw.Draw(img)
     d.text((100, 100), "NOTICE OF MOTION TO DISMISS", fill="black")
-    d.text((100, 160), "Defendant hereby moves to dismiss the complaint pursuant to Rule 12(b)(6).", fill="black")
+    d.text(
+        (100, 160),
+        "Defendant hereby moves to dismiss the complaint pursuant to Rule 12(b)(6).",
+        fill="black",
+    )
     img.save(img_path)
     return img_path
 
@@ -104,21 +126,31 @@ def multipage_pdf(tmp_path):
     c.setFont("Helvetica-Bold", 14)
     c.drawString(72, 720, "DEFENDANT MEMORANDUM OF LAW - PAGE 1")
     c.setFont("Helvetica", 11)
-    c.drawString(72, 680, "Statement of Facts: Plaintiff entered into an agreement on January 15, 2024.")
+    c.drawString(
+        72,
+        680,
+        "Statement of Facts: Plaintiff entered into an agreement on January 15, 2024.",
+    )
     c.showPage()
 
     # Page 2
     c.setFont("Helvetica-Bold", 14)
     c.drawString(72, 720, "ARGUMENT & CITATIONS - PAGE 2")
     c.setFont("Helvetica", 11)
-    c.drawString(72, 680, "Point I: The Statute of Limitations bars all asserted claims.")
+    c.drawString(
+        72, 680, "Point I: The Statute of Limitations bars all asserted claims."
+    )
     c.showPage()
 
     # Page 3
     c.setFont("Helvetica-Bold", 14)
     c.drawString(72, 720, "CONCLUSION - PAGE 3")
     c.setFont("Helvetica", 11)
-    c.drawString(72, 680, "For the foregoing reasons, Defendant respectfully requests that the Motion be Granted.")
+    c.drawString(
+        72,
+        680,
+        "For the foregoing reasons, Defendant respectfully requests that the Motion be Granted.",
+    )
     c.save()
     return pdf_path
 
@@ -141,14 +173,18 @@ def table_pdf(tmp_path):
     ]
 
     t = Table(data, colWidths=[90, 200, 80, 110])
-    t.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ]))
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+            ]
+        )
+    )
     elements.append(t)
     doc.build(elements)
     return pdf_path
@@ -158,9 +194,7 @@ class TestDocumentIngestionPipeline:
 
     def test_1_normal_text_based_pdf(self, ingestion_pipeline, normal_text_pdf):
         doc = ingestion_pipeline.process_document(
-            source=normal_text_pdf,
-            case_id="case_101",
-            force_ocr=False
+            source=normal_text_pdf, case_id="case_101", force_ocr=False
         )
         assert doc.file_type == FileType.PDF
         assert doc.processing_metadata.processing_status == ProcessingStatus.COMPLETED
@@ -175,9 +209,7 @@ class TestDocumentIngestionPipeline:
         assert has_native is False
 
         doc = ingestion_pipeline.process_document(
-            source=scanned_pdf,
-            case_id="case_102",
-            force_ocr=False
+            source=scanned_pdf, case_id="case_102", force_ocr=False
         )
         assert doc.file_type == FileType.PDF
         assert doc.pages[0].has_native_text is False
@@ -185,8 +217,7 @@ class TestDocumentIngestionPipeline:
 
     def test_3_docx_document(self, ingestion_pipeline, docx_document):
         doc = ingestion_pipeline.process_document(
-            source=docx_document,
-            case_id="case_103"
+            source=docx_document, case_id="case_103"
         )
         assert doc.file_type == FileType.DOCX
         assert doc.processing_metadata.processing_status == ProcessingStatus.COMPLETED
@@ -196,8 +227,7 @@ class TestDocumentIngestionPipeline:
 
     def test_4_scanned_image(self, ingestion_pipeline, scanned_image_png):
         doc = ingestion_pipeline.process_document(
-            source=scanned_image_png,
-            case_id="case_104"
+            source=scanned_image_png, case_id="case_104"
         )
         assert doc.file_type == FileType.IMAGE_PNG
         assert doc.processing_metadata.ocr_used is True
@@ -205,8 +235,7 @@ class TestDocumentIngestionPipeline:
 
     def test_5_multipage_document(self, ingestion_pipeline, multipage_pdf):
         doc = ingestion_pipeline.process_document(
-            source=multipage_pdf,
-            case_id="case_105"
+            source=multipage_pdf, case_id="case_105"
         )
         assert doc.file_type == FileType.PDF
         assert len(doc.pages) == 3
@@ -218,10 +247,7 @@ class TestDocumentIngestionPipeline:
         assert "CONCLUSION" in doc.pages[2].raw_text
 
     def test_6_document_containing_tables(self, ingestion_pipeline, table_pdf):
-        doc = ingestion_pipeline.process_document(
-            source=table_pdf,
-            case_id="case_106"
-        )
+        doc = ingestion_pipeline.process_document(source=table_pdf, case_id="case_106")
         assert doc.file_type == FileType.PDF
         page_1 = doc.pages[0]
         assert len(page_1.tables) >= 1 or "CASE DOCKET TIMELINE" in doc.full_raw_text
@@ -230,11 +256,12 @@ class TestDocumentIngestionPipeline:
             assert tbl.num_rows > 0
             assert tbl.num_cols > 0
 
-    def test_7_provenance_traceability_and_storage(self, ingestion_pipeline, normal_text_pdf, tmp_storage_dir):
+    def test_7_provenance_traceability_and_storage(
+        self, ingestion_pipeline, normal_text_pdf, tmp_storage_dir
+    ):
         case_id = "case_provenance_test"
         doc = ingestion_pipeline.process_document(
-            source=normal_text_pdf,
-            case_id=case_id
+            source=normal_text_pdf, case_id=case_id
         )
 
         # Check provenance at block level

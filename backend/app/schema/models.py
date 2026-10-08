@@ -14,6 +14,7 @@ from app.schema.temporal import TemporalProperties
 
 class Triplet(BaseModel):
     """Declarative triplet tuple (Source Entity Type, Relationship Type, Target Entity Type)."""
+
     source_type: EntityType
     relationship_type: RelationshipType
     target_type: EntityType
@@ -26,30 +27,25 @@ class LegalNode(BaseModel):
     """
     Knowledge Graph Node representing a Legal Entity.
     """
+
     id: str = Field(
         default_factory=lambda: str(uuid4()),
-        description="Unique identifier for the node."
+        description="Unique identifier for the node.",
     )
     name: str = Field(
-        ...,
-        min_length=1,
-        description="Canonical name or textual label of the entity."
+        ..., min_length=1, description="Canonical name or textual label of the entity."
     )
-    entity_type: EntityType = Field(
-        ...,
-        description="Controlled entity type enum."
-    )
+    entity_type: EntityType = Field(..., description="Controlled entity type enum.")
     properties: Dict[str, Any] = Field(
         default_factory=dict,
-        description="Domain-specific properties (e.g. docket_number, bar_number)."
+        description="Domain-specific properties (e.g. docket_number, bar_number).",
     )
     provenance: Provenance = Field(
-        ...,
-        description="Mandatory extraction lineage and source provenance record."
+        ..., description="Mandatory extraction lineage and source provenance record."
     )
     temporal: Optional[TemporalProperties] = Field(
         default=None,
-        description="Optional temporal properties if entity has time/deadline metadata."
+        description="Optional temporal properties if entity has time/deadline metadata.",
     )
 
 
@@ -57,41 +53,27 @@ class LegalRelationship(BaseModel):
     """
     Knowledge Graph Edge representing a directed relationship between two Legal Nodes.
     """
+
     id: str = Field(
         default_factory=lambda: str(uuid4()),
-        description="Unique identifier for the relationship edge."
+        description="Unique identifier for the relationship edge.",
     )
-    source_id: str = Field(
-        ...,
-        description="Unique node ID of the source entity."
-    )
-    source_type: EntityType = Field(
-        ...,
-        description="Entity type of the source node."
-    )
+    source_id: str = Field(..., description="Unique node ID of the source entity.")
+    source_type: EntityType = Field(..., description="Entity type of the source node.")
     relationship_type: RelationshipType = Field(
-        ...,
-        description="Controlled relationship type enum."
+        ..., description="Controlled relationship type enum."
     )
-    target_id: str = Field(
-        ...,
-        description="Unique node ID of the target entity."
-    )
-    target_type: EntityType = Field(
-        ...,
-        description="Entity type of the target node."
-    )
+    target_id: str = Field(..., description="Unique node ID of the target entity.")
+    target_type: EntityType = Field(..., description="Entity type of the target node.")
     properties: Dict[str, Any] = Field(
-        default_factory=dict,
-        description="Additional relationship attributes."
+        default_factory=dict, description="Additional relationship attributes."
     )
     provenance: Provenance = Field(
-        ...,
-        description="Mandatory extraction lineage and source provenance record."
+        ..., description="Mandatory extraction lineage and source provenance record."
     )
     temporal: Optional[TemporalProperties] = Field(
         default=None,
-        description="Optional temporal properties (e.g., effective dates of relationship)."
+        description="Optional temporal properties (e.g., effective dates of relationship).",
     )
 
     @property
@@ -100,5 +82,5 @@ class LegalRelationship(BaseModel):
         return Triplet(
             source_type=self.source_type,
             relationship_type=self.relationship_type,
-            target_type=self.target_type
+            target_type=self.target_type,
         )
