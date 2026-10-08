@@ -29,8 +29,8 @@ class CanonicalEntity(BaseModel):
     )
 
     # Provenance tracking
-    mentions: List[CandidateEntity] = Field(
-        default_factory=list, description="Original CandidateEntity mentions."
+    mentions: List[Any] = Field(
+        default_factory=list, description="Original candidate entity mentions."
     )
 
     document_id: str = Field(..., description="Source document ID.")
@@ -92,7 +92,7 @@ class ResolutionResult(BaseModel):
     resolved_relations: List[ResolvedRelation] = Field(
         default_factory=list, description="Resolved relationships."
     )
-    unresolved_entities: List[CandidateEntity] = Field(
+    unresolved_entities: List[Any] = Field(
         default_factory=list,
         description="Entities that could not be resolved or were ambiguous.",
     )

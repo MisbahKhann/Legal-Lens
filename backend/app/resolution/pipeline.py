@@ -39,10 +39,11 @@ class EntityResolutionPipeline:
         )
 
         for ent in entities:
+            ent_text = getattr(ent, "text", getattr(ent, "original_value", ""))
             norm_text = (
                 ent.normalized_value.lower()
-                if ent.normalized_value
-                else ent.text.lower()
+                if getattr(ent, "normalized_value", None)
+                else ent_text.lower()
             )
             norm_text = norm_text.strip()
             if not norm_text:
@@ -53,17 +54,21 @@ class EntityResolutionPipeline:
         candidate_to_canonical_map: Dict[str, str] = {}
 
         for (ent_type, norm_text), group in entity_groups.items():
-            # For simplicity in this document-level resolution, we treat identical (type, exact_name_case_insensitive) as the same entity.
-            # However, if there's high ambiguity (e.g. just "John" vs "John Doe"), we'd want to be cautious.
-            # We'll merge exact case-insensitive matches here.
-
             # Determine canonical name (most frequent exact casing)
             casing_counts = defaultdict(int)
             for ent in group:
-                casing_counts[ent.text] += 1
+                ent_name = getattr(ent, "text", getattr(ent, "original_value", ""))
+                casing_counts[ent_name] += 1
 
             canonical_name = max(casing_counts.items(), key=lambda x: x[1])[0]
-            aliases = list({ent.text for ent in group if ent.text != canonical_name})
+            aliases = list(
+                {
+                    getattr(ent, "text", getattr(ent, "original_value", ""))
+                    for ent in group
+                    if getattr(ent, "text", getattr(ent, "original_value", ""))
+                    != canonical_name
+                }
+            )
 
             canonical_ent = CanonicalEntity(
                 entity_type=ent_type,
@@ -76,7 +81,9 @@ class EntityResolutionPipeline:
             canonical_entities.append(canonical_ent)
 
             for ent in group:
-                candidate_to_canonical_map[ent.entity_id] = canonical_ent.canonical_id
+                ent_id = getattr(ent, "entity_id", getattr(ent, "candidate_id", None))
+                if ent_id:
+                    candidate_to_canonical_map[ent_id] = canonical_ent.canonical_id
 
         # Resolve relationships
         resolved_relations: List[ResolvedRelation] = []

@@ -244,7 +244,9 @@ class ValidationPipeline:
             )
         else:
             # Check confidence
-            avg_conf = sum(m.confidence for m in ent.mentions) / len(ent.mentions)
+            avg_conf = sum(getattr(m, "confidence", 1.0) for m in ent.mentions) / len(
+                ent.mentions
+            )
             if avg_conf < self.low_confidence_threshold:
                 records.append(
                     ValidationRecord(
@@ -259,9 +261,12 @@ class ValidationPipeline:
                 )
 
             # Cross-step agreement (AI vs Rule-based)
-            methods = {m.extraction_method for m in ent.mentions}
+            methods = {
+                getattr(m, "extraction_method", None)
+                for m in ent.mentions
+                if getattr(m, "extraction_method", None)
+            }
             if len(methods) > 1:
-                # Agreement across methods is a good thing, we could log it as INFO but we don't strictly need to.
                 pass
 
         return records
