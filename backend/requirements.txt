@@ -12,3 +12,6 @@ torch
 transformers
 onnxruntime
 rapidocr-onnxruntime
+neo4j>=5.0.0
+python-dotenv
+
