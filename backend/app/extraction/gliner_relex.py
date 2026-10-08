@@ -33,7 +33,7 @@ class GLiNERRelexExtractor:
 
     def __init__(
         self,
-        model_name: str = "knowledgator/gliner-multitask-large-v0.5",
+        model_name: str = "knowledgator/gliner-relex-large-v1.0",
         entity_confidence_threshold: float = 0.40,
         relation_confidence_threshold: float = 0.40,
         device: Optional[str] = None,
@@ -104,15 +104,15 @@ class GLiNERRelexExtractor:
         else:
             model = self._load_model()
             try:
-                if hasattr(model, "predict_entities_and_relations"):
-                    prediction = model.predict_entities_and_relations(
+                if hasattr(model, "predict_relations"):
+                    prediction = model.predict_relations(
                         chunk.text,
-                        self.entity_labels,
-                        rel_labels=self.relation_labels,
+                        labels=self.entity_labels,
+                        relations=self.relation_labels,
                         threshold=min(self.entity_confidence_threshold, self.relation_confidence_threshold)
                     )
-                    raw_entities = prediction.get("entities", [])
-                    raw_relations = prediction.get("relations", [])
+                    raw_entities = prediction[0]
+                    raw_relations = prediction[1]
                 elif hasattr(model, "predict_entities"):
                     raw_entities = model.predict_entities(
                         chunk.text,

@@ -107,7 +107,7 @@ class AIExtractionResult(BaseModel):
     """
     document_id: str = Field(..., description="Source document identifier.")
     case_id: Optional[str] = Field(default=None, description="Associated case identifier.")
-    model_name: str = Field(default="knowledgator/gliner-multitask-large-v0.5", description="Model name used for extraction.")
+    model_name: str = Field(default="knowledgator/gliner-relex-large-v1.0", description="Model name used for extraction.")
     entities: List[CandidateEntity] = Field(default_factory=list, description="Extracted candidate entities.")
     relations: List[CandidateRelation] = Field(default_factory=list, description="Extracted candidate relations.")
     rejected_relations: List[CandidateRelation] = Field(

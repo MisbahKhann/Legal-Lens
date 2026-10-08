@@ -1,0 +1,2293 @@
+{
+  "version": "1.0.0",
+  "node_types": {
+    "CASE": {
+      "label": "Case",
+      "category": "CASE_MATTER",
+      "description": "A judicial proceeding, litigation matter, or lawsuit identified by case title/docket number.",
+      "theme": {
+        "color": "#15803D",
+        "bg_color": "#DCFCE7",
+        "icon": "scale"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "docket_number",
+          "label": "Docket Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "citation",
+          "label": "Citation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "jurisdiction",
+          "label": "Jurisdiction",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "court_name",
+          "label": "Court Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "PERSON": {
+      "label": "Person",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "An individual human being relevant to the legal proceeding.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "full_name",
+          "label": "Full Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "first_name",
+          "label": "First Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "last_name",
+          "label": "Last Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "role",
+          "label": "Role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "alias",
+          "label": "Alias",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "LAWYER": {
+      "label": "Lawyer",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "An attorney or legal practitioner representing a party or appearing in court.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "bar_number",
+          "label": "Bar Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "firm_affiliation",
+          "label": "Firm Affiliation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "specialty",
+          "label": "Specialty",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "JUDGE": {
+      "label": "Judge",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A judicial officer who presides over court proceedings and rulings.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "court_chamber",
+          "label": "Court Chamber",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "appointment_type",
+          "label": "Appointment Type",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "WITNESS": {
+      "label": "Witness",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "An individual who gives testimony or provides sworn statements under oath.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "witness_type",
+          "label": "Witness Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "expertise_area",
+          "label": "Expertise Area",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "subpoena_status",
+          "label": "Subpoena Status",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "ORGANIZATION": {
+      "label": "Organization",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A generic legal or corporate entity, institution, or collective body.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "org_name",
+          "label": "Org Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "org_type",
+          "label": "Org Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "state_of_incorporation",
+          "label": "State Of Incorporation",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "COMPANY": {
+      "label": "Company",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A commercial business organization, corporation, LLC, or partnership.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "ticker_symbol",
+          "label": "Ticker Symbol",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "industry",
+          "label": "Industry",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "ein",
+          "label": "Ein",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "LAW_FIRM": {
+      "label": "Law Firm",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A legal practice entity comprising one or more attorneys offering legal services.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "firm_name",
+          "label": "Firm Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "office_locations",
+          "label": "Office Locations",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "website",
+          "label": "Website",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "GOVERNMENT_AGENCY": {
+      "label": "Government Agency",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A public administrative or executive agency, board, or municipal entity.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "agency_level",
+          "label": "Agency Level",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "jurisdiction",
+          "label": "Jurisdiction",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "regulatory_scope",
+          "label": "Regulatory Scope",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "COURT": {
+      "label": "Court",
+      "category": "PARTY_LEGAL_ACTOR",
+      "description": "A judicial tribunal established to hear and adjudicate legal disputes.",
+      "theme": {
+        "color": "#1E3A8A",
+        "bg_color": "#DBEAFE",
+        "icon": "user-check"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "court_name",
+          "label": "Court Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "court_level",
+          "label": "Court Level",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "district_circuit",
+          "label": "District Circuit",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "jurisdiction",
+          "label": "Jurisdiction",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "STATUTE": {
+      "label": "Statute",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "description": "A formal written enactment of a legislative body (e.g., U.S. Code, state statutes).",
+      "theme": {
+        "color": "#9A3412",
+        "bg_color": "#FFEDD5",
+        "icon": "book-open"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "statute_citation",
+          "label": "Statute Citation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "code_section",
+          "label": "Code Section",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "enacting_body",
+          "label": "Enacting Body",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "REGULATION": {
+      "label": "Regulation",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "description": "A rule or administrative order promulgated by a regulatory agency (e.g., CFR).",
+      "theme": {
+        "color": "#9A3412",
+        "bg_color": "#FFEDD5",
+        "icon": "book-open"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "cfr_citation",
+          "label": "Cfr Citation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "issuing_agency",
+          "label": "Issuing Agency",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "effective_date",
+          "label": "Effective Date",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "LEGAL_CONCEPT": {
+      "label": "Legal Concept",
+      "category": "LEGAL_SOURCE_NORMATIVE",
+      "description": "An established legal principle, doctrine, test, or standard (e.g., Strict Liability, Res Judicata).",
+      "theme": {
+        "color": "#9A3412",
+        "bg_color": "#FFEDD5",
+        "icon": "book-open"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "concept_name",
+          "label": "Concept Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "defining_case",
+          "label": "Defining Case",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "LEGAL_ISSUE": {
+      "label": "Legal Issue",
+      "category": "CASE_MATTER",
+      "description": "A specific legal question or disputed matter of law raised in a case.",
+      "theme": {
+        "color": "#15803D",
+        "bg_color": "#DCFCE7",
+        "icon": "scale"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "issue_description",
+          "label": "Issue Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "area_of_law",
+          "label": "Area Of Law",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "disposition",
+          "label": "Disposition",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "CLAIM": {
+      "label": "Claim",
+      "category": "CASE_MATTER",
+      "description": "A cause of action or legal demand asserted by a party against another.",
+      "theme": {
+        "color": "#15803D",
+        "bg_color": "#DCFCE7",
+        "icon": "scale"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "claim_type",
+          "label": "Claim Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "remedy_sought",
+          "label": "Remedy Sought",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "count_number",
+          "label": "Count Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "DOCUMENT": {
+      "label": "Document",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "A general textual or record item relevant to the legal proceedings.",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "document_type",
+          "label": "Document Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "bates_number",
+          "label": "Bates Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "date_created",
+          "label": "Date Created",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "CONTRACT": {
+      "label": "Contract",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "A legally binding agreement or instrument between two or more parties.",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "contract_title",
+          "label": "Contract Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "effective_date",
+          "label": "Effective Date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "termination_date",
+          "label": "Termination Date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "governing_law",
+          "label": "Governing Law",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "EVIDENCE": {
+      "label": "Evidence",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "Any item, record, or physical item offered to prove or disprove a fact.",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "evidence_id",
+          "label": "Evidence Id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "admissibility_status",
+          "label": "Admissibility Status",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "EXHIBIT": {
+      "label": "Exhibit",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "A document or item formally marked and produced as evidence in court.",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "exhibit_label",
+          "label": "Exhibit Label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "offering_party",
+          "label": "Offering Party",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "admission_date",
+          "label": "Admission Date",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "FILING": {
+      "label": "Filing",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "A formal written document submitted to the court (e.g., Motion, Brief, Complaint, Answer).",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "filing_type",
+          "label": "Filing Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "docket_entry_number",
+          "label": "Docket Entry Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "filing_date",
+          "label": "Filing Date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "submitting_party",
+          "label": "Submitting Party",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "TESTIMONY": {
+      "label": "Testimony",
+      "category": "DOCUMENTARY_EVIDENCE",
+      "description": "Oral or written statement given under oath during deposition, hearing, or trial.",
+      "theme": {
+        "color": "#B45309",
+        "bg_color": "#FEF3C7",
+        "icon": "file-text"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "deponent_name",
+          "label": "Deponent Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "testimony_date",
+          "label": "Testimony Date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "transcript_volume",
+          "label": "Transcript Volume",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "EVENT": {
+      "label": "Event",
+      "category": "TEMPORAL_EVENT",
+      "description": "A factual occurrence, incident, transaction, or legal occurrence relevant to the narrative.",
+      "theme": {
+        "color": "#6B21A8",
+        "bg_color": "#F3E8FF",
+        "icon": "calendar"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "event_name",
+          "label": "Event Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "location",
+          "label": "Location",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "DATE": {
+      "label": "Date",
+      "category": "TEMPORAL_EVENT",
+      "description": "A specific calendar date or time instance referenced in the record.",
+      "theme": {
+        "color": "#6B21A8",
+        "bg_color": "#F3E8FF",
+        "icon": "calendar"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "date_value",
+          "label": "Date Value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "iso_format",
+          "label": "Iso Format",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "granularity",
+          "label": "Granularity",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "DEADLINE": {
+      "label": "Deadline",
+      "category": "TEMPORAL_EVENT",
+      "description": "A fixed procedural or statutory date/time by which an action must be completed.",
+      "theme": {
+        "color": "#6B21A8",
+        "bg_color": "#F3E8FF",
+        "icon": "calendar"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "deadline_name",
+          "label": "Deadline Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "due_date",
+          "label": "Due Date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "governing_rule",
+          "label": "Governing Rule",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "HEARING": {
+      "label": "Hearing",
+      "category": "TEMPORAL_EVENT",
+      "description": "A formal judicial proceeding before a court or tribunal (e.g., Oral Argument, Trial, Motion Hearing).",
+      "theme": {
+        "color": "#6B21A8",
+        "bg_color": "#F3E8FF",
+        "icon": "calendar"
+      },
+      "form_fields": [
+        {
+          "name": "name",
+          "label": "Entity Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "hearing_type",
+          "label": "Hearing Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "presiding_judge",
+          "label": "Presiding Judge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "courtroom",
+          "label": "Courtroom",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  },
+  "relationship_types": {
+    "PLAINTIFF_IN": {
+      "description": "Indicates that an entity is a plaintiff initiating legal action in a case.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAWYER",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "DEFENDANT_IN": {
+      "description": "Indicates that an entity is a defendant accused or sued in a case.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAWYER",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "REPRESENTED_BY": {
+      "description": "Indicates legal representation by an attorney or law firm.",
+      "is_directed": true,
+      "inverse": "REPRESENTS",
+      "allowed_sources": [
+        "CASE",
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "LAWYER",
+        "LAW_FIRM"
+      ]
+    },
+    "DECIDED_BY": {
+      "description": "Indicates judicial decision or resolution of a case, issue, or claim by a judge or court.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "FILING",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "COURT",
+        "JUDGE"
+      ]
+    },
+    "FILED_IN": {
+      "description": "Indicates submission of a filing or document to a specific court or case file.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "FILING"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COURT"
+      ]
+    },
+    "CITES": {
+      "description": "Indicates legal reference or citation of an authority, statute, case, or document.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "FILING",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "APPLIES": {
+      "description": "Indicates judicial application of a statute, regulation, or legal doctrine.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "DOCUMENT",
+        "FILING",
+        "JUDGE"
+      ],
+      "allowed_targets": [
+        "LEGAL_CONCEPT",
+        "LEGAL_ISSUE",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "INTERPRETS": {
+      "description": "Indicates legal interpretation or construction of a statute, contract clause, or doctrine.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "DOCUMENT",
+        "FILING",
+        "JUDGE"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "REGULATION",
+        "STATUTE"
+      ]
+    },
+    "OVERRULES": {
+      "description": "Indicates higher court precedent setting aside or invalidating prior case authority.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "FOLLOWS": {
+      "description": "Indicates judicial adherence to binding or persuasive precedent.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "DISTINGUISHES": {
+      "description": "Indicates distinguishing facts or legal context of current matter from precedent.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "COURT",
+        "FILING"
+      ],
+      "allowed_targets": [
+        "CASE"
+      ]
+    },
+    "SUPPORTED_BY": {
+      "description": "Indicates that a claim, issue, or testimony is supported by evidence, testimony, or statutory authority.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "FILING",
+        "LEGAL_ISSUE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY"
+      ]
+    },
+    "CONTRADICTED_BY": {
+      "description": "Indicates that a claim, assertion, or testimony is contradicted by opposing evidence or testimony.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CLAIM",
+        "EVIDENCE",
+        "FILING",
+        "LEGAL_ISSUE",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "TESTIMONY"
+      ]
+    },
+    "EVIDENCED_BY": {
+      "description": "Indicates factual proof of an event or claim via specific exhibit or documentary evidence.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "EVENT",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "TESTIMONY"
+      ]
+    },
+    "MENTIONED_IN": {
+      "description": "Indicates explicit textual mention of an entity inside a document, filing, or testimony.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "COMPANY",
+        "CONTRACT",
+        "COURT",
+        "DATE",
+        "DEADLINE",
+        "DOCUMENT",
+        "EVENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "FILING",
+        "GOVERNMENT_AGENCY",
+        "HEARING",
+        "JUDGE",
+        "LAWYER",
+        "LAW_FIRM",
+        "LEGAL_CONCEPT",
+        "LEGAL_ISSUE",
+        "ORGANIZATION",
+        "PERSON",
+        "REGULATION",
+        "STATUTE",
+        "TESTIMONY",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY"
+      ]
+    },
+    "WORKS_FOR": {
+      "description": "Indicates employment or organizational affiliation.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "LAWYER",
+        "PERSON",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "COURT",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION"
+      ]
+    },
+    "EMPLOYED_BY": {
+      "description": "Indicates formal employment relationship connecting individual to entity.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "LAWYER",
+        "PERSON",
+        "WITNESS"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "COURT",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION"
+      ]
+    },
+    "OWNS": {
+      "description": "Indicates legal ownership, title, or controlling interest.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "LAW_FIRM",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "allowed_targets": [
+        "COMPANY",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVIDENCE",
+        "EXHIBIT",
+        "ORGANIZATION"
+      ]
+    },
+    "REPRESENTS": {
+      "description": "Indicates attorney or law firm representation of a party or matter.",
+      "is_directed": true,
+      "inverse": "REPRESENTED_BY",
+      "allowed_sources": [
+        "LAWYER",
+        "LAW_FIRM"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COMPANY",
+        "GOVERNMENT_AGENCY",
+        "ORGANIZATION",
+        "PERSON"
+      ]
+    },
+    "OCCURRED_ON": {
+      "description": "Associates an event, hearing, or filing with a specific calendar date entity.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CONTRACT",
+        "DOCUMENT",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE"
+      ]
+    },
+    "OCCURRED_IN": {
+      "description": "Associates an event, hearing, or document with a case or court proceeding context.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "DOCUMENT",
+        "EVENT",
+        "HEARING",
+        "TESTIMONY"
+      ],
+      "allowed_targets": [
+        "CASE",
+        "COURT"
+      ]
+    },
+    "BEFORE": {
+      "description": "Temporal ordering indicating source event/date occurred prior to target event/date.",
+      "is_directed": true,
+      "inverse": "AFTER",
+      "allowed_sources": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ]
+    },
+    "AFTER": {
+      "description": "Temporal ordering indicating source event/date occurred after target event/date.",
+      "is_directed": true,
+      "inverse": "BEFORE",
+      "allowed_sources": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE",
+        "EVENT",
+        "FILING",
+        "HEARING"
+      ]
+    },
+    "HAS_DEADLINE": {
+      "description": "Associates a procedural filing, case, or task with a specific deadline entity or date.",
+      "is_directed": true,
+      "inverse": null,
+      "allowed_sources": [
+        "CASE",
+        "CLAIM",
+        "EVENT",
+        "FILING",
+        "HEARING",
+        "LEGAL_ISSUE"
+      ],
+      "allowed_targets": [
+        "DATE",
+        "DEADLINE"
+      ]
+    }
+  },
+  "ui_matrix": {
+    "GOVERNMENT_AGENCY": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "REPRESENTED_BY": [
+        "LAW_FIRM",
+        "LAWYER"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OWNS": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "COMPANY",
+        "ORGANIZATION",
+        "DOCUMENT"
+      ]
+    },
+    "PERSON": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "REPRESENTED_BY": [
+        "LAW_FIRM",
+        "LAWYER"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "WORKS_FOR": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ],
+      "EMPLOYED_BY": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ],
+      "OWNS": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "COMPANY",
+        "ORGANIZATION",
+        "DOCUMENT"
+      ]
+    },
+    "LAWYER": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "WORKS_FOR": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ],
+      "EMPLOYED_BY": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ],
+      "REPRESENTS": [
+        "GOVERNMENT_AGENCY",
+        "PERSON",
+        "COMPANY",
+        "ORGANIZATION",
+        "CASE"
+      ]
+    },
+    "COMPANY": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "REPRESENTED_BY": [
+        "LAW_FIRM",
+        "LAWYER"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OWNS": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "COMPANY",
+        "ORGANIZATION",
+        "DOCUMENT"
+      ]
+    },
+    "ORGANIZATION": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "REPRESENTED_BY": [
+        "LAW_FIRM",
+        "LAWYER"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OWNS": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "COMPANY",
+        "ORGANIZATION",
+        "DOCUMENT"
+      ]
+    },
+    "LAW_FIRM": {
+      "PLAINTIFF_IN": [
+        "CASE"
+      ],
+      "DEFENDANT_IN": [
+        "CASE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OWNS": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "COMPANY",
+        "ORGANIZATION",
+        "DOCUMENT"
+      ],
+      "REPRESENTS": [
+        "GOVERNMENT_AGENCY",
+        "PERSON",
+        "COMPANY",
+        "ORGANIZATION",
+        "CASE"
+      ]
+    },
+    "CASE": {
+      "REPRESENTED_BY": [
+        "LAW_FIRM",
+        "LAWYER"
+      ],
+      "DECIDED_BY": [
+        "COURT",
+        "JUDGE"
+      ],
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "APPLIES": [
+        "LEGAL_ISSUE",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "INTERPRETS": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "OVERRULES": [
+        "CASE"
+      ],
+      "FOLLOWS": [
+        "CASE"
+      ],
+      "DISTINGUISHES": [
+        "CASE"
+      ],
+      "SUPPORTED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "STATUTE",
+        "TESTIMONY",
+        "DOCUMENT",
+        "REGULATION"
+      ],
+      "EVIDENCED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "TESTIMONY",
+        "DOCUMENT"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "HEARING": {
+      "DECIDED_BY": [
+        "COURT",
+        "JUDGE"
+      ],
+      "EVIDENCED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "TESTIMONY",
+        "DOCUMENT"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ],
+      "OCCURRED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "BEFORE": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "AFTER": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "LEGAL_ISSUE": {
+      "DECIDED_BY": [
+        "COURT",
+        "JUDGE"
+      ],
+      "SUPPORTED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "STATUTE",
+        "TESTIMONY",
+        "DOCUMENT",
+        "REGULATION"
+      ],
+      "CONTRADICTED_BY": [
+        "TESTIMONY",
+        "DOCUMENT",
+        "EXHIBIT",
+        "EVIDENCE"
+      ],
+      "EVIDENCED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "TESTIMONY",
+        "DOCUMENT"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "FILING": {
+      "DECIDED_BY": [
+        "COURT",
+        "JUDGE"
+      ],
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "APPLIES": [
+        "LEGAL_ISSUE",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "INTERPRETS": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "DISTINGUISHES": [
+        "CASE"
+      ],
+      "SUPPORTED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "STATUTE",
+        "TESTIMONY",
+        "DOCUMENT",
+        "REGULATION"
+      ],
+      "CONTRADICTED_BY": [
+        "TESTIMONY",
+        "DOCUMENT",
+        "EXHIBIT",
+        "EVIDENCE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ],
+      "BEFORE": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "AFTER": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "CLAIM": {
+      "DECIDED_BY": [
+        "COURT",
+        "JUDGE"
+      ],
+      "SUPPORTED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "STATUTE",
+        "TESTIMONY",
+        "DOCUMENT",
+        "REGULATION"
+      ],
+      "CONTRADICTED_BY": [
+        "TESTIMONY",
+        "DOCUMENT",
+        "EXHIBIT",
+        "EVIDENCE"
+      ],
+      "EVIDENCED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "TESTIMONY",
+        "DOCUMENT"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "CONTRACT": {
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ]
+    },
+    "EXHIBIT": {
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "EVIDENCE": {
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "CONTRADICTED_BY": [
+        "TESTIMONY",
+        "DOCUMENT",
+        "EXHIBIT",
+        "EVIDENCE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "DOCUMENT": {
+      "FILED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "APPLIES": [
+        "LEGAL_ISSUE",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "INTERPRETS": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ],
+      "OCCURRED_IN": [
+        "COURT",
+        "CASE"
+      ]
+    },
+    "STATUTE": {
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "TESTIMONY": {
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "SUPPORTED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "STATUTE",
+        "TESTIMONY",
+        "DOCUMENT",
+        "REGULATION"
+      ],
+      "CONTRADICTED_BY": [
+        "TESTIMONY",
+        "DOCUMENT",
+        "EXHIBIT",
+        "EVIDENCE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_IN": [
+        "COURT",
+        "CASE"
+      ]
+    },
+    "REGULATION": {
+      "CITES": [
+        "CONTRACT",
+        "STATUTE",
+        "DOCUMENT",
+        "CASE",
+        "REGULATION"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "JUDGE": {
+      "APPLIES": [
+        "LEGAL_ISSUE",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "INTERPRETS": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "COURT": {
+      "APPLIES": [
+        "LEGAL_ISSUE",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "INTERPRETS": [
+        "CONTRACT",
+        "LEGAL_CONCEPT",
+        "STATUTE",
+        "REGULATION"
+      ],
+      "OVERRULES": [
+        "CASE"
+      ],
+      "FOLLOWS": [
+        "CASE"
+      ],
+      "DISTINGUISHES": [
+        "CASE"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    },
+    "EVENT": {
+      "EVIDENCED_BY": [
+        "CONTRACT",
+        "EXHIBIT",
+        "EVIDENCE",
+        "TESTIMONY",
+        "DOCUMENT"
+      ],
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "OCCURRED_ON": [
+        "DATE"
+      ],
+      "OCCURRED_IN": [
+        "COURT",
+        "CASE"
+      ],
+      "BEFORE": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "AFTER": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "HAS_DEADLINE": [
+        "DEADLINE",
+        "DATE"
+      ]
+    },
+    "WITNESS": {
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "WORKS_FOR": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ],
+      "EMPLOYED_BY": [
+        "GOVERNMENT_AGENCY",
+        "COMPANY",
+        "ORGANIZATION",
+        "COURT",
+        "LAW_FIRM"
+      ]
+    },
+    "DEADLINE": {
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "BEFORE": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "AFTER": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ]
+    },
+    "DATE": {
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ],
+      "BEFORE": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ],
+      "AFTER": [
+        "HEARING",
+        "DATE",
+        "FILING",
+        "DEADLINE",
+        "EVENT"
+      ]
+    },
+    "LEGAL_CONCEPT": {
+      "MENTIONED_IN": [
+        "CONTRACT",
+        "EXHIBIT",
+        "FILING",
+        "TESTIMONY",
+        "DOCUMENT",
+        "CASE"
+      ]
+    }
+  },
+  "provenance_fields": [
+    {
+      "name": "case_id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "source_document_id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "source_page",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "source_text",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "confidence",
+      "type": "number",
+      "min": 0.0,
+      "max": 1.0,
+      "required": true
+    },
+    {
+      "name": "extraction_method",
+      "type": "select",
+      "options": [
+        "GLINER_RELEX",
+        "DETERMINISTIC_RULE",
+        "MANUAL_HUMAN",
+        "LLM_EXTRACTION"
+      ],
+      "required": true
+    }
+  ],
+  "temporal_fields": [
+    {
+      "name": "event_date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "start_date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "end_date",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "deadline",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "select",
+      "options": [
+        "PENDING",
+        "COMPLETED",
+        "UPCOMING",
+        "OVERDUE",
+        "CANCELLED",
+        "ONGOING"
+      ],
+      "required": false
+    }
+  ]
+}
