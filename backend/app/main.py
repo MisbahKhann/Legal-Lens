@@ -6,10 +6,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.review_router import router as review_router
+from app.api.llm_router import router as llm_router
 
 app = FastAPI(
     title="LegalLens Knowledge Graph Backend API",
-    description="Backend API for Legal Knowledge Graph Human-in-the-Loop Review and Correction.",
+    description="Backend API for Legal Knowledge Graph Human-in-the-Loop Review and Local LLM Fallback.",
     version="1.0.0",
 )
 
@@ -22,13 +23,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Step 9 Review router
+# Include Step 9 Review router & Step 10 LLM router
 app.include_router(review_router)
+app.include_router(llm_router)
 
 
 @app.get("/health")
 def health_check():
-    return {"status": "HEALTHY", "service": "LegalLens API", "step": 9}
+    return {"status": "HEALTHY", "service": "LegalLens API", "step": 10}
 
 
 if __name__ == "__main__":
