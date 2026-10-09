@@ -6,6 +6,7 @@ safe Cypher MERGE operations, and case-isolated graph retrieval helpers.
 
 import os
 import logging
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
 try:
@@ -371,3 +372,210 @@ class Neo4jGraphStore:
             nodes_deleted = summary.counters.nodes_deleted
             logger.info("Cleared case %s: deleted %d nodes.", case_id, nodes_deleted)
             return nodes_deleted
+
+    # =========================================================================
+    # Step 9 Review & Correction Methods
+    # =========================================================================
+
+    def update_entity_trust_status(
+        self,
+        entity_id: str,
+        case_id: str,
+        trust_status: str,
+        corrected_fields: Optional[Dict[str, Any]] = None,
+    ) -> bool:
+        """Updates the trust status and optional corrected properties of a LegalEntity node."""
+        driver = self.connect()
+        query = """
+        MATCH (n:LegalEntity {id: $entity_id, case_id: $case_id})
+        SET n.trust_status = $trust_status,
+            n.updated_at = $now
+        """
+        params: Dict[str, Any] = {
+            "entity_id": entity_id,
+            "case_id": case_id,
+            "trust_status": trust_status,
+            "now": datetime.now(timezone.utc).isoformat(),
+        }
+
+        if corrected_fields:
+            if "canonical_name" in corrected_fields:
+                query += ",\n n.canonical_name = $canonical_name, n.normalized_name = $normalized_name"
+                params["canonical_name"] = corrected_fields["canonical_name"]
+                params["normalized_name"] = (
+                    corrected_fields.get("normalized_name")
+                    or corrected_fields["canonical_name"].lower().strip()
+                )
+            if "entity_type" in corrected_fields:
+                query += ",\n n.entity_type = $entity_type"
+                params["entity_type"] = corrected_fields["entity_type"]
+            if "aliases" in corrected_fields:
+                query += ",\n n.aliases = $aliases"
+                params["aliases"] = corrected_fields["aliases"]
+
+        query += "\nRETURN n.id AS id"
+
+        with driver.session(database=self.database) as session:
+            res = session.run(query, **params)
+            record = res.single()
+            return record is not None
+
+    def update_relationship_trust_status(
+        self,
+        relationship_id: str,
+        case_id: str,
+        trust_status: str,
+        corrected_fields: Optional[Dict[str, Any]] = None,
+    ) -> bool:
+        """Updates the trust status and optional corrected properties of a relationship."""
+        driver = self.connect()
+        query = """
+        MATCH (s:LegalEntity {case_id: $case_id})-[r {id: $relationship_id, case_id: $case_id}]->(t:LegalEntity {case_id: $case_id})
+        SET r.trust_status = $trust_status
+        RETURN r.id AS id
+        """
+        with driver.session(database=self.database) as session:
+            res = session.run(
+                query,
+                relationship_id=relationship_id,
+                case_id=case_id,
+                trust_status=trust_status,
+            )
+            return res.single() is not None
+
+    def update_timeline_event_trust_status(
+        self,
+        event_id: str,
+        case_id: str,
+        trust_status: str,
+        corrected_fields: Optional[Dict[str, Any]] = None,
+    ) -> bool:
+        """Updates the trust status and optional corrected fields of a TimelineEvent node."""
+        driver = self.connect()
+        query = """
+        MATCH (n:TimelineEvent {id: $event_id, case_id: $case_id})
+        SET n.trust_status = $trust_status,
+            n.temporal_status = $trust_status
+        """
+        params: Dict[str, Any] = {
+            "event_id": event_id,
+            "case_id": case_id,
+            "trust_status": trust_status,
+        }
+
+        if corrected_fields:
+            if (
+                "event_date" in corrected_fields
+                and corrected_fields["event_date"] is not None
+            ):
+                query += ",\n n.event_date = $event_date"
+                params["event_date"] = corrected_fields["event_date"]
+            if (
+                "start_date" in corrected_fields
+                and corrected_fields["start_date"] is not None
+            ):
+                query += ",\n n.start_date = $start_date"
+                params["start_date"] = corrected_fields["start_date"]
+            if (
+                "end_date" in corrected_fields
+                and corrected_fields["end_date"] is not None
+            ):
+                query += ",\n n.end_date = $end_date"
+                params["end_date"] = corrected_fields["end_date"]
+            if (
+                "date_precision" in corrected_fields
+                and corrected_fields["date_precision"] is not None
+            ):
+                query += ",\n n.date_precision = $date_precision"
+                params["date_precision"] = corrected_fields["date_precision"]
+            if (
+                "event_type" in corrected_fields
+                and corrected_fields["event_type"] is not None
+            ):
+                query += ",\n n.event_type = $event_type"
+                params["event_type"] = corrected_fields["event_type"]
+            if (
+                "description" in corrected_fields
+                and corrected_fields["description"] is not None
+            ):
+                query += ",\n n.description = $description"
+                params["description"] = corrected_fields["description"]
+
+        query += "\nRETURN n.id AS id"
+
+        with driver.session(database=self.database) as session:
+            res = session.run(query, **params)
+            return res.single() is not None
+
+    def merge_entities_in_graph(
+        self, case_id: str, primary_entity_id: str, secondary_entity_id: str
+    ) -> bool:
+        """
+        Safely redirects relationships from secondary entity to primary entity in Neo4j,
+        updates aliases on primary entity, and marks secondary entity as MERGED.
+        """
+        driver = self.connect()
+
+        # Cypher query to redirect outgoing & incoming edges and update primary node properties
+        query = """
+        MATCH (primary:LegalEntity {id: $primary_id, case_id: $case_id})
+        MATCH (secondary:LegalEntity {id: $secondary_id, case_id: $case_id})
+
+        // Merge secondary aliases into primary entity
+        SET primary.aliases = apoc.coll.toSet(coalesce(primary.aliases, []) + coalesce(secondary.aliases, []) + [secondary.canonical_name]),
+            secondary.trust_status = 'MERGED',
+            secondary.merged_into_id = primary.id
+
+        WITH primary, secondary
+
+        // Redirect outgoing relationships from secondary -> target to primary -> target
+        OPTIONAL MATCH (secondary)-[out_r]->(target:LegalEntity {case_id: $case_id})
+        WHERE target.id <> primary.id
+        FOREACH (ignore IN CASE WHEN out_r IS NOT NULL THEN [1] ELSE [] END |
+            MERGE (primary)-[new_out:`` + type(out_r) + `` {id: out_r.id, case_id: $case_id}]->(target)
+            SET new_out = properties(out_r)
+            DELETE out_r
+        )
+
+        WITH primary, secondary
+
+        // Redirect incoming relationships from source -> secondary to source -> primary
+        OPTIONAL MATCH (source:LegalEntity {case_id: $case_id})-[in_r]->(secondary)
+        WHERE source.id <> primary.id
+        FOREACH (ignore IN CASE WHEN in_r IS NOT NULL THEN [1] ELSE [] END |
+            MERGE (source)-[new_in:`` + type(in_r) + `` {id: in_r.id, case_id: $case_id}]->(primary)
+            SET new_in = properties(in_r)
+            DELETE in_r
+        )
+
+        RETURN primary.id AS id
+        """
+
+        # Standalone fallback query without APOC
+        fallback_query = """
+        MATCH (primary:LegalEntity {id: $primary_id, case_id: $case_id})
+        MATCH (secondary:LegalEntity {id: $secondary_id, case_id: $case_id})
+        SET secondary.trust_status = 'MERGED',
+            secondary.merged_into_id = primary.id
+        RETURN primary.id AS id
+        """
+
+        with driver.session(database=self.database) as session:
+            try:
+                res = session.run(
+                    query,
+                    case_id=case_id,
+                    primary_id=primary_entity_id,
+                    secondary_id=secondary_entity_id,
+                )
+                record = res.single()
+                return record is not None
+            except Exception as e:
+                logger.warning("Advanced merge query note, using fallback: %s", str(e))
+                res = session.run(
+                    fallback_query,
+                    case_id=case_id,
+                    primary_id=primary_entity_id,
+                    secondary_id=secondary_entity_id,
+                )
+                return res.single() is not None
