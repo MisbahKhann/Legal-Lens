@@ -1,0 +1,116 @@
+{
+  "dataset_id": "gold_std_sample_v1",
+  "description": "Illustrative sample gold-standard dataset for LegalLens evaluation pipeline benchmarking.",
+  "is_illustrative": true,
+  "created_at": "2026-10-09T00:00:00Z",
+  "documents": [
+    {
+      "document_id": "doc_eval_001",
+      "case_id": "case_eval_100",
+      "metadata": {
+        "title": "FIRST AMENDED COMPLAINT FOR DAMAGES",
+        "jurisdiction": "SDNY"
+      },
+      "entities": [
+        {
+          "entity_id": "g_ent_1",
+          "document_id": "doc_eval_001",
+          "entity_type": "COURT",
+          "text": "SOUTHERN DISTRICT OF NEW YORK",
+          "normalized_value": "United States District Court for the Southern District of New York",
+          "page_number": 1
+        },
+        {
+          "entity_id": "g_ent_2",
+          "document_id": "doc_eval_001",
+          "entity_type": "DOCKET",
+          "text": "1:24-cv-01234",
+          "normalized_value": "1:24-CV-01234",
+          "page_number": 1
+        },
+        {
+          "entity_id": "g_ent_3",
+          "document_id": "doc_eval_001",
+          "entity_type": "PERSON",
+          "text": "JOHN DOE",
+          "normalized_value": "John Doe",
+          "page_number": 1
+        },
+        {
+          "entity_id": "g_ent_4",
+          "document_id": "doc_eval_001",
+          "entity_type": "ORGANIZATION",
+          "text": "ABC CORP.",
+          "normalized_value": "ABC Corporation",
+          "page_number": 1
+        },
+        {
+          "entity_id": "g_ent_5",
+          "document_id": "doc_eval_001",
+          "entity_type": "STATUTE",
+          "text": "42 U.S.C. § 1983",
+          "normalized_value": "42 U.S.C. § 1983",
+          "page_number": 1
+        }
+      ],
+      "relationships": [
+        {
+          "relation_id": "g_rel_1",
+          "document_id": "doc_eval_001",
+          "source_entity_text": "JOHN DOE",
+          "relation_type": "FILED_ACTION",
+          "target_entity_text": "ABC CORP.",
+          "page_number": 1
+        },
+        {
+          "relation_id": "g_rel_2",
+          "document_id": "doc_eval_001",
+          "source_entity_text": "1:24-cv-01234",
+          "relation_type": "FILED_IN",
+          "target_entity_text": "SOUTHERN DISTRICT OF NEW YORK",
+          "page_number": 1
+        }
+      ],
+      "events": [
+        {
+          "event_id": "g_evt_1",
+          "document_id": "doc_eval_001",
+          "event_type": "EVENT",
+          "description": "The events in question occurred on January 15, 2024",
+          "event_date": "2024-01-15",
+          "page_number": 1
+        },
+        {
+          "event_id": "g_evt_2",
+          "document_id": "doc_eval_001",
+          "event_type": "NOTICE",
+          "description": "Notice was given on 02/20/2024",
+          "event_date": "2024-02-20",
+          "page_number": 1
+        }
+      ],
+      "equivalence_pairs": [
+        {
+          "document_id": "doc_eval_001",
+          "entity_text_1": "JOHN DOE",
+          "entity_text_2": "John Doe",
+          "are_equivalent": true,
+          "canonical_name": "John Doe"
+        },
+        {
+          "document_id": "doc_eval_001",
+          "entity_text_1": "ABC CORP.",
+          "entity_text_2": "ABC Corporation",
+          "are_equivalent": true,
+          "canonical_name": "ABC Corporation"
+        },
+        {
+          "document_id": "doc_eval_001",
+          "entity_text_1": "JOHN DOE",
+          "entity_text_2": "ABC CORP.",
+          "are_equivalent": false
+        }
+      ]
+    }
+  ]
+}

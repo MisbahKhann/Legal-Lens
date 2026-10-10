@@ -45,15 +45,17 @@ class Neo4jGraphStore:
 
     def connect(self) -> Driver:
         """Initializes and returns the Neo4j driver instance."""
+        if self._driver is not None:
+            return self._driver
+
         if neo4j is None:
             raise ImportError(
                 "The 'neo4j' Python package is not installed. Please run 'pip install neo4j'."
             )
 
-        if self._driver is None:
-            auth = (self.username, self.password) if self.username else None
-            self._driver = GraphDatabase.driver(self.uri, auth=auth)
-            logger.info("Connected to Neo4j database at %s", self.uri)
+        auth = (self.username, self.password) if self.username else None
+        self._driver = GraphDatabase.driver(self.uri, auth=auth)
+        logger.info("Connected to Neo4j database at %s", self.uri)
         return self._driver
 
     def close(self) -> None:

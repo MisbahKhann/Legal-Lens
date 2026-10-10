@@ -1,0 +1,185 @@
+{
+  "run_id": "eval_run_81ffb15050cc",
+  "timestamp": "2026-10-09T12:14:10.273491Z",
+  "dataset_id": "gold_std_sample_v1",
+  "is_illustrative_fixture": true,
+  "num_documents_evaluated": 1,
+  "model_configuration": {
+    "eval_mode": "offline_fixture"
+  },
+  "metric_definitions": {
+    "Precision": "TP / (TP + FP) — proportion of predicted extractions that are correct.",
+    "Recall": "TP / (TP + FN) — proportion of ground-truth annotations correctly identified.",
+    "F1_Score": "Harmonic mean of Precision and Recall: 2 * (P * R) / (P + R).",
+    "Pairwise_Resolution": "Pairwise precision and recall on candidate entity equivalence pairs.",
+    "Temporal_Matching": "Matching predictions against expected events and ISO dates.",
+    "Provenance_Completeness": "Proportion of extractions with page_number, offsets, and source_text.",
+    "Graph_Consistency": "In-memory graph triplet validity score without requiring live Neo4j."
+  },
+  "matching_rules": {
+    "Entity_Matching": "Exact or normalized substring match on text, document ID, and entity_type.",
+    "Relationship_Matching": "Match source entity text, relation_type, and target entity text.",
+    "Temporal_Matching": "ISO date string equality or normalized date substring match.",
+    "Resolution_Matching": "Cluster membership verification against gold equivalence pairs."
+  },
+  "excluded_or_failed_counts": {},
+  "entity_metrics": {
+    "category": "OVERALL_ENTITIES",
+    "true_positives": 5,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "is_calculable": true,
+    "note": null
+  },
+  "relationship_metrics": {
+    "category": "OVERALL_RELATIONS",
+    "true_positives": 2,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "is_calculable": true,
+    "note": null
+  },
+  "resolution_metrics": {
+    "total_pairs_evaluated": 3,
+    "true_positives": 2,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_negatives": 1,
+    "pairwise_precision": 1.0,
+    "pairwise_recall": 1.0,
+    "pairwise_f1": 1.0,
+    "accuracy": 1.0,
+    "is_calculable": true,
+    "note": null
+  },
+  "temporal_metrics": {
+    "total_gold_events": 2,
+    "total_predicted_events": 2,
+    "matched_events_count": 2,
+    "exact_date_matches": 2,
+    "partial_date_matches": 0,
+    "date_matching_precision": 1.0,
+    "date_matching_recall": 1.0,
+    "date_matching_f1": 1.0,
+    "is_calculable": true,
+    "note": null
+  },
+  "validation_metrics": {
+    "total_items_validated": 3,
+    "valid_items_count": 3,
+    "invalid_items_count": 0,
+    "warning_count": 0,
+    "review_required_count": 0,
+    "invalid_rate": 0.0,
+    "valid_rate": 1.0
+  },
+  "provenance_metrics": {
+    "total_evaluated_items": 5,
+    "items_with_page_number": 5,
+    "items_with_offsets": 5,
+    "items_with_source_text": 5,
+    "fully_provenanced_items": 5,
+    "provenance_completeness_rate": 1.0
+  },
+  "escalation_metrics": {
+    "total_candidates_processed": 5,
+    "escalated_for_review_count": 0,
+    "approved_without_review_count": 5,
+    "escalation_rate": 0.0
+  },
+  "graph_consistency_metrics": {
+    "total_nodes": 2,
+    "total_edges": 1,
+    "dangling_edges_count": 0,
+    "orphan_nodes_count": 0,
+    "invalid_triplet_types_count": 0,
+    "graph_consistency_score": 1.0
+  },
+  "per_category_entity": {
+    "COURT": {
+      "category": "COURT",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    },
+    "DOCKET": {
+      "category": "DOCKET",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    },
+    "ORGANIZATION": {
+      "category": "ORGANIZATION",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    },
+    "PERSON": {
+      "category": "PERSON",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    },
+    "STATUTE": {
+      "category": "STATUTE",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    }
+  },
+  "per_category_relationship": {
+    "FILED ACTION": {
+      "category": "FILED ACTION",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    },
+    "FILED IN": {
+      "category": "FILED IN",
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "is_calculable": true,
+      "note": null
+    }
+  }
+}
