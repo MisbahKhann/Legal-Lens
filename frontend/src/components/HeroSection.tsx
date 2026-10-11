@@ -1,73 +1,66 @@
 'use client';
 
 import React from 'react';
-import { Navbar } from './Navbar';
 import { OversizedBrandBackground } from './OversizedBrandBackground';
-import { HeroBadge } from './HeroBadge';
-import { SolutionSidebar } from './SolutionSidebar';
-import { TrustLogos } from './TrustLogos';
 import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 
-export const HeroSection = () => {
+interface HeroSectionProps {
+  onRequestDemo?: () => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestDemo }) => {
+  const handleDemoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (onRequestDemo) {
+      e.preventDefault();
+      onRequestDemo();
+    }
+  };
+
   return (
-    <section className="hero-section-root">
-      {/* Background Lighting & Grid Effects */}
+    <section className="hero-section-root" id="overview">
       <div className="hero-bg-container">
-        <div className="hero-grid-overlay"></div>
-        <div className="hero-glow-cyan"></div>
-        <div className="hero-glow-indigo"></div>
-        <div className="hero-glow-gold"></div>
+        {/* Subtle Brand Watermark behind foreground */}
+        <OversizedBrandBackground />
 
-        {/* Top Floating Navbar */}
-        <Navbar />
+        {/* Localized contrast vignette for crisp text legibility over architecture */}
+        <div className="hero-contrast-vignette" aria-hidden="true" />
 
-        {/* Editorial Canvas Container */}
+        {/* Core Hero Content */}
         <div className="hero-canvas-frame">
-          {/* Oversized Editorial Brand Text Watermark */}
-          <OversizedBrandBackground />
+          <div className="hero-content-stack">
+            {/* Main Headline */}
+            <h1 className="hero-headline">
+              Legal intelligence,<br />
+              <span className="headline-emphasis">clearly connected.</span>
+            </h1>
 
-          {/* Core Content Grid */}
-          <div className="hero-content-grid">
-            
-            {/* LEFT COLUMN: Headline & Primary CTAs */}
-            <div className="hero-left-col">
-              {/* Refined Small Badge */}
-              <HeroBadge />
+            {/* Supporting Description */}
+            <p className="hero-description">
+              Research cases, understand contracts, and organize legal evidence in one intelligent workspace.
+            </p>
 
-              {/* Main Headline */}
-              <h1 className="hero-headline">
-                Legal Research.<br />
-                <span className="headline-highlight">Reimagined.</span>
-              </h1>
+            {/* Restrained CTAs */}
+            <div className="hero-cta-group">
+              <a
+                href="#demo"
+                onClick={handleDemoClick}
+                className="btn-primary-cta"
+                id="hero-request-demo-btn"
+              >
+                <Sparkles size={16} className="cta-sparkle" aria-hidden="true" />
+                <span>Request a Demo</span>
+                <ArrowRight size={16} className="cta-arrow" aria-hidden="true" />
+              </a>
 
-              {/* Supporting Description */}
-              <p className="hero-description">
-                Research case law, analyze contracts, trace legal timelines, and organize case evidence in one intelligent workspace built for legal professionals.
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="hero-cta-group">
-                <a href="#explore" className="btn-primary-cta">
-                  <Sparkles size={18} className="cta-sparkle" />
-                  <span>Explore LegalLens</span>
-                  <ArrowRight size={17} className="cta-arrow" />
-                </a>
-
-                <a href="#features" className="btn-secondary-cta">
-                  <Compass size={17} className="secondary-icon" />
-                  <span>Discover Features</span>
-                </a>
-              </div>
-
-              {/* Partner Badges / Trust Logos */}
-              <TrustLogos />
+              <a
+                href="#features"
+                className="btn-secondary-cta"
+                id="hero-explore-features-btn"
+              >
+                <Compass size={16} className="secondary-icon" aria-hidden="true" />
+                <span>Explore Features</span>
+              </a>
             </div>
-
-            {/* RIGHT COLUMN: Category Icons, Spotlight & Key Metrics */}
-            <div className="hero-right-col">
-              <SolutionSidebar />
-            </div>
-
           </div>
         </div>
       </div>
@@ -76,76 +69,91 @@ export const HeroSection = () => {
         .hero-section-root {
           position: relative;
           width: 100%;
-          min-height: 100vh;
+          min-height: calc(100vh - 80px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem 1.5rem 6rem 1.5rem;
         }
 
         .hero-bg-container {
           position: relative;
-          min-height: 100vh;
           width: 100%;
-          background: transparent;
+          max-width: 1380px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Localized subtle dark vignette behind text to guarantee legibility */
+        .hero-contrast-vignette {
+          position: absolute;
+          inset: -15% -20%;
+          background: radial-gradient(
+            ellipse 65% 55% at 50% 50%,
+            rgba(20, 13, 14, 0.78) 0%,
+            rgba(20, 13, 14, 0.45) 55%,
+            transparent 85%
+          );
+          pointer-events: none;
+          z-index: 2;
         }
 
         .hero-canvas-frame {
           position: relative;
-          max-width: 1440px;
-          margin: 0 auto;
+          z-index: 10;
           width: 100%;
-          padding: 2rem 2.5rem 4rem 2.5rem;
           display: flex;
           flex-direction: column;
-        }
-
-        .hero-content-grid {
-          position: relative;
-          z-index: 10;
-          display: grid;
-          grid-template-columns: 1.15fr 0.85fr;
-          justify-content: space-between;
-          gap: 4rem;
           align-items: center;
-          margin-top: 5rem;
+          text-align: center;
+          padding: 3rem 1rem 2rem 1rem;
         }
 
-        .hero-left-col {
+        .hero-content-stack {
+          max-width: 860px;
+          margin: 0 auto;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          z-index: 10;
-          max-width: 580px;
+          align-items: center;
         }
 
         .hero-headline {
           font-family: var(--font-sans);
-          font-size: clamp(2.75rem, 4.2vw, 4.2rem);
+          font-size: clamp(2.75rem, 5.8vw, 4.85rem);
           font-weight: 800;
-          line-height: 1.08;
-          letter-spacing: -0.03em;
+          line-height: 1.1;
+          letter-spacing: -0.035em;
           color: var(--text-cream);
-          margin-bottom: 1.25rem;
+          margin-bottom: 1.5rem;
+          text-wrap: balance;
+          text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
         }
 
-        .headline-highlight {
-          background: linear-gradient(135deg, var(--accent-gold) 0%, var(--text-cream) 40%, var(--accent-gold-bright) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          position: relative;
+        .headline-emphasis {
+          color: var(--accent-gold);
           display: inline-block;
+          font-weight: 800;
         }
 
         .hero-description {
-          font-size: 1.05rem;
-          line-height: 1.65;
+          font-size: clamp(1.1rem, 2vw, 1.3rem);
+          line-height: 1.6;
           color: var(--text-cream-muted);
-          max-width: 480px;
-          margin-bottom: 2.2rem;
+          max-width: 640px;
+          margin: 0 auto 2.5rem auto;
           font-weight: 400;
+          text-wrap: balance;
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
         }
 
         .hero-cta-group {
           display: flex;
           align-items: center;
-          gap: 1.2rem;
+          justify-content: center;
+          gap: 1.25rem;
           flex-wrap: wrap;
         }
 
@@ -153,27 +161,38 @@ export const HeroSection = () => {
           display: inline-flex;
           align-items: center;
           gap: 0.65rem;
-          padding: 0.9rem 1.8rem;
-          background: linear-gradient(135deg, var(--accent-burgundy) 0%, var(--accent-burgundy-bright) 100%);
+          padding: 0.95rem 2rem;
+          background: var(--accent-burgundy);
           color: var(--text-cream);
-          font-size: 0.95rem;
-          font-weight: 800;
-          border-radius: 100px;
+          font-size: 0.98rem;
+          font-weight: 600;
+          border-radius: 999px;
           border: 1px solid var(--accent-gold);
           text-decoration: none;
           box-shadow: 
-            0 10px 30px rgba(107, 31, 40, 0.4),
-            inset 0 1px 0 rgba(245, 237, 225, 0.2);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            0 8px 24px rgba(107, 31, 40, 0.45),
+            0 2px 8px rgba(0, 0, 0, 0.4);
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
         }
 
         .btn-primary-cta:hover {
-          transform: translateY(-2px);
-          background: linear-gradient(135deg, var(--accent-burgundy-bright) 0%, #a1323f 100%);
-          box-shadow: 
-            0 15px 40px rgba(107, 31, 40, 0.6),
-            inset 0 1px 0 rgba(245, 237, 225, 0.4);
+          background: var(--accent-burgundy-bright);
           border-color: var(--accent-gold-bright);
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 
+            0 12px 30px rgba(107, 31, 40, 0.6),
+            0 0 20px rgba(201, 162, 75, 0.3);
+        }
+
+        .btn-primary-cta:active {
+          transform: translateY(0);
+        }
+
+        .btn-primary-cta:focus-visible {
+          outline: 2px solid var(--accent-gold);
+          outline-offset: 3px;
         }
 
         .cta-sparkle {
@@ -192,64 +211,67 @@ export const HeroSection = () => {
           display: inline-flex;
           align-items: center;
           gap: 0.55rem;
-          padding: 0.9rem 1.6rem;
-          background: rgba(31, 19, 21, 0.6);
+          padding: 0.95rem 1.85rem;
+          background: rgba(20, 13, 14, 0.65);
           color: var(--text-cream);
-          font-size: 0.95rem;
-          font-weight: 600;
-          border-radius: 100px;
+          font-size: 0.98rem;
+          font-weight: 500;
+          border-radius: 999px;
           border: 1px solid rgba(201, 162, 75, 0.3);
           text-decoration: none;
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          transition: all 0.25s ease;
         }
 
         .btn-secondary-cta:hover {
-          background: rgba(107, 31, 40, 0.3);
+          background: rgba(31, 19, 21, 0.9);
           border-color: var(--accent-gold);
           color: var(--accent-gold);
           transform: translateY(-2px);
+        }
+
+        .btn-secondary-cta:active {
+          transform: translateY(0);
+        }
+
+        .btn-secondary-cta:focus-visible {
+          outline: 2px solid var(--accent-gold);
+          outline-offset: 3px;
         }
 
         .secondary-icon {
           color: var(--accent-gold);
         }
 
-        .hero-right-col {
-          display: flex;
-          flex-direction: column;
-          z-index: 10;
-          max-width: 420px;
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
-          .hero-content-grid {
-            grid-template-columns: 1fr;
-            margin-top: 2.5rem;
-            gap: 3rem;
-          }
-          .hero-right-col {
-            max-width: 100%;
-          }
-          .hero-left-col {
-            max-width: 100%;
-          }
-        }
-
         @media (max-width: 768px) {
-          .hero-canvas-frame {
-            padding: 1rem 1.25rem 3rem 1.25rem;
+          .hero-section-root {
+            padding: 1.5rem 1rem 4rem 1rem;
+            min-height: auto;
           }
           .hero-headline {
-            font-size: 2.5rem;
+            font-size: 2.6rem;
+            margin-bottom: 1.25rem;
+          }
+          .hero-description {
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
           }
           .hero-cta-group {
             width: 100%;
+            flex-direction: column;
+            gap: 0.85rem;
           }
           .btn-primary-cta, .btn-secondary-cta {
             width: 100%;
             justify-content: center;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .btn-primary-cta, .btn-secondary-cta, .cta-arrow {
+            transition: none;
+            transform: none !important;
           }
         }
       `}</style>

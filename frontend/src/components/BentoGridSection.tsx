@@ -15,9 +15,13 @@ import {
   Zap
 } from 'lucide-react';
 
-export const BentoGridSection = () => {
+interface BentoGridSectionProps {
+  onRequestDemo?: () => void;
+}
+
+export const BentoGridSection: React.FC<BentoGridSectionProps> = ({ onRequestDemo }) => {
   return (
-    <section className="bento-section">
+    <section className="bento-section" id="solutions">
       <div className="bento-container">
         
         {/* Section Header matching structural inspiration */}
@@ -29,8 +33,8 @@ export const BentoGridSection = () => {
           <p className="bento-subtitle">
             Synthesize precedent case law in seconds, analyze complex contracts, and verify citations with grounded precision.
           </p>
-          <a href="#capabilities" className="bento-cta-btn">
-            <span>Explore Platform Capabilities</span>
+          <a href="#features" className="bento-cta-btn">
+            <span>Explore All Platform Features</span>
             <ArrowRight size={16} />
           </a>
         </div>
@@ -168,36 +172,113 @@ export const BentoGridSection = () => {
 
         </div>
 
-        {/* Bottom 3-Column Highlights Row matching inspiration image layout */}
-        <div className="bento-bottom-row">
-          <div className="bottom-col">
-            <div className="col-icon">
-              <Zap size={20} />
-            </div>
-            <h4 className="col-title">Lightning-Fast Research</h4>
-            <p className="col-desc">
-              Search, cross-reference, and synthesize over 500,000 legal rulings in under 0.4 seconds.
-            </p>
+        {/* Enterprise Highlights Section */}
+        <div className="enterprise-section-block" id="enterprise">
+          <div className="section-subheading-group">
+            <span className="section-kicker">ENTERPRISE ARCHITECTURE</span>
+            <h3 className="section-subheading">Built for Law Firms & In-House Counsel</h3>
           </div>
 
-          <div className="bottom-col">
-            <div className="col-icon">
-              <ShieldCheck size={20} />
+          <div className="bento-bottom-row">
+            <div className="bottom-col">
+              <div className="col-icon">
+                <Zap size={20} />
+              </div>
+              <h4 className="col-title">High-Throughput Research</h4>
+              <p className="col-desc">
+                Search, cross-reference, and synthesize complex precedent case law and statutory codes in real time.
+              </p>
             </div>
-            <h4 className="col-title">Grounded AI & Zero Hallucination</h4>
-            <p className="col-desc">
-              Every AI response is backed by pinpoint page citations to primary case law and statutory codes.
+
+            <div className="bottom-col">
+              <div className="col-icon">
+                <ShieldCheck size={20} />
+              </div>
+              <h4 className="col-title">Citation-Grounded Accuracy</h4>
+              <p className="col-desc">
+                Every response is anchored to primary court rulings and statutory references for attorney review.
+              </p>
+            </div>
+
+            <div className="bottom-col">
+              <div className="col-icon">
+                <Scale size={20} />
+              </div>
+              <h4 className="col-title">Tenant Data Confidentiality</h4>
+              <p className="col-desc">
+                Client case files and contract uploads remain strictly isolated with zero unauthorized public model training.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Pricing & Resources Dual Block */}
+        <div className="info-dual-grid">
+          {/* Pricing Box */}
+          <div className="info-card" id="pricing">
+            <div className="card-badge gold">
+              <span>LICENSING OVERVIEW</span>
+            </div>
+            <h3 className="info-card-title">Enterprise Firm Licensing</h3>
+            <p className="info-card-desc">
+              LegalLens is tailored for boutique firms, national practices, and corporate legal departments.
+              Pricing is customized based on active attorney seats, practice areas, and private cloud deployment requirements.
             </p>
+            <div className="info-feature-list">
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Private tenant workspace with dedicated encryption keys</span>
+              </div>
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Onboarding walkthrough and custom knowledge graph setup</span>
+              </div>
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Priority technical assistance and model verification support</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onRequestDemo}
+              className="info-action-btn"
+            >
+              <span>Request Pricing & Demo</span>
+              <ArrowRight size={15} />
+            </button>
           </div>
 
-          <div className="bottom-col">
-            <div className="col-icon">
-              <Scale size={20} />
+          {/* Resources Box */}
+          <div className="info-card" id="resources">
+            <div className="card-badge">
+              <span>DOCUMENTATION & GUIDES</span>
             </div>
-            <h4 className="col-title">Precision Analytics</h4>
-            <p className="col-desc">
-              Automated liability risk matrix scoring, indemnification redlining, and compliance verification.
+            <h3 className="info-card-title">Platform Resources</h3>
+            <p className="info-card-desc">
+              Comprehensive reference materials for litigation teams, corporate counsel, and legal operations leaders.
             </p>
+            <div className="info-feature-list">
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Technical Architecture & Security Whitepaper overview</span>
+              </div>
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Attorney Workflow Guides: Contract review & timeline extraction</span>
+              </div>
+              <div className="info-feature-item">
+                <CheckCircle2 size={15} className="text-gold" />
+                <span>Verification & Citation Grounding FAQ documentation</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onRequestDemo}
+              className="info-action-btn outline"
+            >
+              <span>Contact Platform Team</span>
+              <ArrowRight size={15} />
+            </button>
           </div>
         </div>
 
@@ -608,6 +689,123 @@ export const BentoGridSection = () => {
           line-height: 1.5;
         }
 
+        /* Enterprise Block & Dual Grid */
+        .enterprise-section-block {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          padding-top: 1rem;
+        }
+
+        .section-subheading-group {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+        }
+
+        .section-kicker {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--accent-gold);
+        }
+
+        .section-subheading {
+          font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          color: var(--text-cream);
+        }
+
+        .info-dual-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+          margin-top: 1.5rem;
+        }
+
+        .info-card {
+          background: rgba(31, 19, 21, 0.75);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(201, 162, 75, 0.25);
+          border-radius: 20px;
+          padding: 2rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+          transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+          border-color: rgba(201, 162, 75, 0.5);
+          transform: translateY(-3px);
+        }
+
+        .info-card-title {
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: var(--text-cream);
+          letter-spacing: -0.01em;
+        }
+
+        .info-card-desc {
+          font-size: 0.88rem;
+          color: var(--text-cream-muted);
+          line-height: 1.6;
+        }
+
+        .info-feature-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.65rem;
+          margin: 0.5rem 0 1rem 0;
+        }
+
+        .info-feature-item {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          font-size: 0.84rem;
+          color: var(--text-cream);
+        }
+
+        .info-action-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.55rem;
+          padding: 0.75rem 1.5rem;
+          background: var(--accent-burgundy);
+          color: var(--text-cream);
+          border: 1px solid var(--accent-gold);
+          border-radius: 999px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-top: auto;
+          box-shadow: 0 4px 15px rgba(107, 31, 40, 0.4);
+        }
+
+        .info-action-btn:hover {
+          background: var(--accent-burgundy-bright);
+          border-color: var(--accent-gold-bright);
+          transform: translateY(-1px);
+        }
+
+        .info-action-btn.outline {
+          background: rgba(20, 13, 14, 0.7);
+          border-color: rgba(201, 162, 75, 0.4);
+        }
+
+        .info-action-btn.outline:hover {
+          background: rgba(107, 31, 40, 0.4);
+          border-color: var(--accent-gold);
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 1024px) {
           .card-graph, .card-risk, .card-qa-centerpiece {
@@ -623,11 +821,17 @@ export const BentoGridSection = () => {
             grid-template-columns: 1fr;
             gap: 2rem;
           }
+          .info-dual-grid {
+            grid-template-columns: 1fr;
+          }
         }
 
         @media (max-width: 640px) {
           .card-graph, .card-risk, .card-qa-centerpiece, .card-timeline, .card-translator {
             grid-column: span 12;
+          }
+          .info-card {
+            padding: 1.5rem;
           }
         }
       `}</style>

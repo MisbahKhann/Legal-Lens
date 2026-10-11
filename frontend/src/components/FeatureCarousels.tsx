@@ -89,7 +89,7 @@ const row2Features: FeatureItem[] = [
 
 export const FeatureCarousels = () => {
   return (
-    <section className="carousels-section">
+    <section className="carousels-section" id="features">
       <div className="section-header">
         <div className="header-badge">
           <span className="badge-dot"></span>

@@ -5,7 +5,7 @@ import React from 'react';
 export const OversizedBrandBackground = () => {
   return (
     <div className="oversized-brand-wrapper" aria-hidden="true">
-      <h1 className="oversized-brand-text">LegalLens</h1>
+      <div className="oversized-brand-text">LegalLens</div>
       <div className="brand-glow-line"></div>
       
       <style jsx>{`
