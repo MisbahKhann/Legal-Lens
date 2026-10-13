@@ -64,7 +64,7 @@ const LITIGATION_FEATURES: FeatureItem[] = [
     name: 'Case Knowledge Graph',
     desc: 'Explore connections between cases, people, evidence, and events.',
     icon: GitFork,
-    href: '#features',
+    href: '/knowledge-graph',
   },
 ];
 
@@ -169,6 +169,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onRequestDemo, activeSection = '
   const handleItemClick = (href: string) => {
     setOpenDropdown(null);
     setMobileMenuOpen(false);
+    if (href.startsWith('/')) {
+      window.location.href = href;
+      return;
+    }
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
