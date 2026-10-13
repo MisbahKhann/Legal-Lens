@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.review_router import router as review_router
 from app.api.llm_router import router as llm_router
+from app.api.graph_router import router as graph_router
 
 app = FastAPI(
     title="LegalLens Knowledge Graph Backend API",
@@ -23,9 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Step 9 Review router & Step 10 LLM router
+# Include Step 9 Review router, Step 10 LLM router, and Knowledge Graph router
 app.include_router(review_router)
 app.include_router(llm_router)
+app.include_router(graph_router)
 
 
 @app.get("/health")

@@ -18,7 +18,7 @@ from app.extraction.ai_models import (
     CombinedExtractionResult,
 )
 from app.extraction.chunker import DocumentChunker, DocumentChunk
-from app.extraction.gliner_relex import GLiNERRelexExtractor
+from app.extraction.gliner_relex import GLiNERRelexExtractor, get_extractor
 
 logger = logging.getLogger(__name__)
 
@@ -38,11 +38,15 @@ class AIExtractionPipeline:
     ):
         """
         Args:
-            extractor: Configured GLiNERRelexExtractor instance (or creates default).
+            extractor: GLiNERRelexExtractor instance.  Defaults to the process-wide
+                singleton (loaded once, reused across all requests) to avoid the
+                3–8 minute model cold-load on every upload.
             chunker: Configured DocumentChunker instance (or creates default).
             deterministic_pipeline: Step 3 pipeline instance (or creates default).
         """
-        self.extractor = extractor or GLiNERRelexExtractor()
+        # Use the process-wide singleton unless the caller supplies a specific instance
+        # (e.g. in tests that inject a mock extractor).
+        self.extractor = extractor if extractor is not None else get_extractor()
         self.chunker = chunker or DocumentChunker()
         self.deterministic_pipeline = (
             deterministic_pipeline or DeterministicExtractionPipeline()

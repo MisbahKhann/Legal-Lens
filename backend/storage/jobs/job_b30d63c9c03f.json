@@ -1,0 +1,11 @@
+{
+  "job_id": "job_b30d63c9c03f",
+  "case_id": "case_investigation",
+  "filename": "606US1PP_Ord.pdf",
+  "status": "PROCESSING",
+  "stage": "Extracting entities from 24 pages (this takes several minutes on CPU)",
+  "created_at": "2026-10-13T12:22:39.700392+00:00",
+  "updated_at": "2026-10-13T12:24:14.826430+00:00",
+  "metrics": {},
+  "error": null
+}

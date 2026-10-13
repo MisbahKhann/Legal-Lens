@@ -27,6 +27,31 @@ logger = logging.getLogger(__name__)
 CONTROLLED_ENTITY_TYPES: List[str] = [e.value for e in EntityType]
 CONTROLLED_RELATIONSHIP_TYPES: List[str] = [r.value for r in RelationshipType]
 
+# ---------------------------------------------------------------------------
+# Module-level singleton — one GLiNERRelexExtractor instance per process.
+# Loading the large GLiNER model takes 3–8 minutes on CPU; re-instantiating
+# it on every upload request is the primary cause of the 30-minute wall.
+# Callers should use get_extractor() instead of constructing a new instance.
+# ---------------------------------------------------------------------------
+_extractor_singleton: "Optional[GLiNERRelexExtractor]" = None
+_extractor_lock = __import__("threading").Lock()
+
+
+def get_extractor(**kwargs) -> "GLiNERRelexExtractor":
+    """
+    Returns the process-wide GLiNERRelexExtractor singleton.
+    Thread-safe: the first caller loads the model; subsequent callers reuse it.
+    Pass keyword arguments only on the first call (they are ignored thereafter).
+    """
+    global _extractor_singleton
+    if _extractor_singleton is not None:
+        return _extractor_singleton
+    with _extractor_lock:
+        if _extractor_singleton is None:
+            logger.info("Initialising GLiNERRelexExtractor singleton (first call).")
+            _extractor_singleton = GLiNERRelexExtractor(**kwargs)
+        return _extractor_singleton
+
 
 class GLiNERRelexExtractor:
     """

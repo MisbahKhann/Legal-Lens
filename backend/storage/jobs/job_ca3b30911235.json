@@ -1,0 +1,11 @@
+{
+  "job_id": "job_ca3b30911235",
+  "case_id": "case_investigation",
+  "filename": "sample_nda.docx",
+  "status": "PROCESSING",
+  "stage": "Extracting entities from 1 page(s) (GLiNER model \u2014 reuses cached instance)",
+  "created_at": "2026-10-13T14:31:41.722418+00:00",
+  "updated_at": "2026-10-13T14:31:43.274917+00:00",
+  "metrics": {},
+  "error": null
+}

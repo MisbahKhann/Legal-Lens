@@ -1,0 +1,11 @@
+{
+  "job_id": "job_a272b580e82f",
+  "case_id": "case_investigation",
+  "filename": "epa_sample_letter.pdf",
+  "status": "PROCESSING",
+  "stage": "Extracting entities from 3 pages (this takes several minutes on CPU)",
+  "created_at": "2026-10-13T12:52:57.059781+00:00",
+  "updated_at": "2026-10-13T12:55:15.094976+00:00",
+  "metrics": {},
+  "error": null
+}
