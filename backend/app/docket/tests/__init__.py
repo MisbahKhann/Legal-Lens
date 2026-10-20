@@ -1,0 +1,1 @@
+"""Docket module test suite."""
