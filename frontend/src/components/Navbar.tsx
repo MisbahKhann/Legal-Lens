@@ -57,7 +57,7 @@ const LITIGATION_FEATURES: FeatureItem[] = [
     name: 'Trial Reminder & Document Keeping',
     desc: 'Organize trial reminders, deadlines, and case documents.',
     icon: CalendarCheck,
-    href: '#features',
+    href: '/docket',
   },
   {
     id: 'f3',
