@@ -1,0 +1,96 @@
+{
+  "case_id": "test_unit_case_notes",
+  "summary": {
+    "entity_count": 6,
+    "relationship_count": 0,
+    "timeline_event_count": 0
+  },
+  "entities": [
+    {
+      "id": "ent_03c24ca23d",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:02:16.480490+00:00",
+      "updated_at": "2026-10-12T10:02:16.480490+00:00"
+    },
+    {
+      "id": "ent_57ee093e6a",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:18:35.186241+00:00",
+      "updated_at": "2026-10-12T10:18:35.186241+00:00"
+    },
+    {
+      "id": "ent_37393f1960",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:47:28.229474+00:00",
+      "updated_at": "2026-10-12T10:47:28.229474+00:00"
+    },
+    {
+      "id": "ent_19741347f7",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T08:29:47.961317+00:00",
+      "updated_at": "2026-10-13T08:29:47.961317+00:00"
+    },
+    {
+      "id": "ent_4acf469a12",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T13:39:19.230057+00:00",
+      "updated_at": "2026-10-13T13:39:19.230057+00:00"
+    },
+    {
+      "id": "ent_8fd6981fe0",
+      "case_id": "test_unit_case_notes",
+      "canonical_name": "Key Witness",
+      "normalized_name": "key witness",
+      "entity_type": "WITNESS",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T13:57:50.365382+00:00",
+      "updated_at": "2026-10-13T13:57:50.365382+00:00"
+    }
+  ],
+  "relationships": [],
+  "timeline_events": []
+}

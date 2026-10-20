@@ -18,6 +18,50 @@ from docling.datamodel.document import ConversionResult
 from app.ingestion.models import FileType
 from app.ingestion.ocr import OCREngineManager, OCREngineType
 
+import logging
+import threading
+
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Module-level converter cache — keyed by (use_ocr, ocr_engine).
+# Docling loads several internal ML models (layout, table structure, OCR)
+# on first conversion. Re-creating DocumentConverter on every upload is the
+# second major contributor to the 30-minute processing wall.
+# ---------------------------------------------------------------------------
+_converter_cache: dict = {}
+_converter_lock = threading.Lock()
+
+
+def get_cached_converter(
+    use_ocr: bool = True,
+    ocr_engine: OCREngineType = OCREngineType.RAPIDOCR,
+) -> DocumentConverter:
+    """
+    Returns a cached DocumentConverter for the given (use_ocr, ocr_engine) pair.
+    Thread-safe: the first call for each configuration builds and caches the converter.
+    """
+    key = (use_ocr, ocr_engine)
+    if key in _converter_cache:
+        return _converter_cache[key]
+    with _converter_lock:
+        if key not in _converter_cache:
+            logger.info(
+                "Building Docling DocumentConverter (use_ocr=%s, engine=%s).",
+                use_ocr,
+                ocr_engine,
+            )
+            pdf_options = OCREngineManager.get_pipeline_options(
+                use_ocr=use_ocr, ocr_engine=ocr_engine, do_table_structure=True
+            )
+            format_options = {
+                InputFormat.PDF: PdfFormatOption(pipeline_options=pdf_options),
+                InputFormat.IMAGE: ImageFormatOption(pipeline_options=pdf_options),
+                InputFormat.DOCX: WordFormatOption(),
+            }
+            _converter_cache[key] = DocumentConverter(format_options=format_options)
+        return _converter_cache[key]
+
 
 class DoclingParseResult(BaseModel):
     """Container holding the raw Docling conversion result and parameters."""
@@ -61,12 +105,15 @@ class DoclingParser:
     ) -> DoclingParseResult:
         """
         Parses a document file using Docling.
+        Uses a module-level cached DocumentConverter to avoid reloading Docling
+        internal models (layout detection, table structure, OCR) on every call.
         """
         path = Path(file_path)
         if not path.is_file():
             raise FileNotFoundError(f"Target document not found at {path}")
 
-        converter = self.create_converter(use_ocr=use_ocr, ocr_engine=ocr_engine)
+        # Use cached converter — avoids 2-5 minute model reload on every upload.
+        converter = get_cached_converter(use_ocr=use_ocr, ocr_engine=ocr_engine)
         conversion_result = converter.convert(str(path))
 
         actual_ocr_used = (

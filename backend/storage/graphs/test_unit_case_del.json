@@ -1,0 +1,96 @@
+{
+  "case_id": "test_unit_case_del",
+  "summary": {
+    "entity_count": 6,
+    "relationship_count": 0,
+    "timeline_event_count": 0
+  },
+  "entities": [
+    {
+      "id": "ent_d3cf310b41",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:02:16.511146+00:00",
+      "updated_at": "2026-10-12T10:02:16.511146+00:00"
+    },
+    {
+      "id": "ent_39c4099833",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:18:35.242962+00:00",
+      "updated_at": "2026-10-12T10:18:35.242962+00:00"
+    },
+    {
+      "id": "ent_ea0ffc2202",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-12T10:47:28.300596+00:00",
+      "updated_at": "2026-10-12T10:47:28.300596+00:00"
+    },
+    {
+      "id": "ent_aa1904bdec",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T08:29:47.999286+00:00",
+      "updated_at": "2026-10-13T08:29:47.999286+00:00"
+    },
+    {
+      "id": "ent_85b61b5999",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T13:39:19.382158+00:00",
+      "updated_at": "2026-10-13T13:39:19.382158+00:00"
+    },
+    {
+      "id": "ent_7516f435f6",
+      "case_id": "test_unit_case_del",
+      "canonical_name": "E2",
+      "normalized_name": "e2",
+      "entity_type": "ORGANIZATION",
+      "aliases": [],
+      "source_text": "User created entity",
+      "confidence": 1.0,
+      "trust_status": "APPROVED",
+      "extraction_method": "MANUAL_HUMAN",
+      "created_at": "2026-10-13T13:57:50.438023+00:00",
+      "updated_at": "2026-10-13T13:57:50.438023+00:00"
+    }
+  ],
+  "relationships": [],
+  "timeline_events": []
+}
