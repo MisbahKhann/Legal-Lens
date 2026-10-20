@@ -16,6 +16,7 @@ rapidocr-onnxruntime
 neo4j>=5.0.0
 python-dotenv
 fastapi>=0.100.0
+python-multipart==0.0.32
 uvicorn>=0.20.0
 httpx>=0.24.0
 alembic>=1.13.0

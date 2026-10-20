@@ -1,0 +1,26 @@
+{
+  "job_id": "job_4d95c3dd060c",
+  "case_id": "perf_test_002",
+  "filename": "sample_nda.docx",
+  "status": "SUCCESS",
+  "stage": "Complete \u2014 22 entities, 1 relationships",
+  "created_at": "2026-10-13T13:56:24.948705+00:00",
+  "updated_at": "2026-10-13T13:56:32.338542+00:00",
+  "metrics": {
+    "entities_extracted": 22,
+    "relationships_extracted": 1,
+    "timeline_events_extracted": 6,
+    "review_items_flagged": 4,
+    "neo4j_synced": false,
+    "stage_timings_secs": {
+      "ingestion_secs": 1.72,
+      "extraction_secs": 0.58,
+      "resolution_secs": 0.01,
+      "validation_secs": 0.02,
+      "temporal_secs": 0.81,
+      "persist_secs": 4.19
+    },
+    "total_pipeline_secs": 7.35
+  },
+  "error": null
+}
